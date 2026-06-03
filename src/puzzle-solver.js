@@ -53,6 +53,34 @@
     };
   }
 
+  function analyzeLevel(level, options = {}) {
+    const knownSolution = options.solutionOrder || level.solutionOrder || null;
+    const knownValidation = knownSolution
+      ? rules.validateKnownSolution(level, knownSolution)
+      : { valid: false, reason: "solutionOrder is missing" };
+    const knownAnalysis = analyzeOrder(level, knownSolution);
+    const initialMoves = rules.getRemovableArrows(level, level.arrows).map((arrow) => arrow.id);
+
+    return {
+      solvable: Boolean(knownValidation.valid),
+      oneSolution: knownValidation.valid ? [...knownSolution] : [],
+      knownSolutionValid: Boolean(knownValidation.valid),
+      knownSolution: knownValidation,
+      initialMoves: initialMoves.length,
+      initialMoveIds: initialMoves,
+      maxBranching: knownAnalysis.maxBranching,
+      averageBranching: knownAnalysis.averageBranching,
+      knownAverageBranching: knownAnalysis.averageBranching,
+      knownMaxBranching: knownAnalysis.maxBranching,
+      knownBranching: knownAnalysis.branching,
+      solutionCount: null,
+      solutionCountCapped: false,
+      dependencyDepth: knownAnalysis.dependencyDepth,
+      visitedStates: 0,
+      analysisMode: "linear"
+    };
+  }
+
   function solveLevel(level, options = {}) {
     const solutionCountCap = options.solutionCountCap || 1000;
     const maxVisitedStates = options.maxVisitedStates || 50000;
@@ -175,6 +203,7 @@
 
   window.ArrowPuzzleSolver = {
     solveLevel,
+    analyzeLevel,
     analyzeOrder
   };
 }());

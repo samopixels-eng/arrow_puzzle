@@ -9,6 +9,13 @@
     throw new Error("ArrowPuzzleRules and ArrowPuzzleSolver must load before puzzle-generator.js");
   }
 
+  // longLineRatio: a "long" arrow spans at least this fraction of the larger
+  //   board dimension (≈10%), so long lines scale with map size.
+  // longLineChance: probability a given placement attempt aims for a long spine.
+  // longLineMaxEdges: upper bound on a spine length (also capped by free space).
+  // straightBias: chance a spine keeps its current direction (straighter lines).
+  // rayBias: chance a short filler routes onto a placed arrow's exit ray
+  //   (creates interlocking by blocking that arrow at the start).
   const DIFFICULTY_CONFIGS = {
     easy: {
       minEdges: 1,
@@ -16,7 +23,12 @@
       targetInitialMoves: [3, 5],
       targetDependencyRatio: 0.3,
       pathAttempts: 90,
-      solutionCountCap: 600
+      solutionCountCap: 600,
+      longLineRatio: 0.1,
+      longLineChance: 0.15,
+      longLineMaxEdges: 4,
+      straightBias: 0.8,
+      rayBias: 0.7
     },
     normal: {
       minEdges: 1,
@@ -24,7 +36,12 @@
       targetInitialMoves: [2, 4],
       targetDependencyRatio: 0.5,
       pathAttempts: 120,
-      solutionCountCap: 600
+      solutionCountCap: 600,
+      longLineRatio: 0.1,
+      longLineChance: 0.25,
+      longLineMaxEdges: 6,
+      straightBias: 0.8,
+      rayBias: 0.65
     },
     hard: {
       minEdges: 2,
@@ -32,7 +49,12 @@
       targetInitialMoves: [1, 2],
       targetDependencyRatio: 0.7,
       pathAttempts: 160,
-      solutionCountCap: 600
+      solutionCountCap: 600,
+      longLineRatio: 0.1,
+      longLineChance: 0.35,
+      longLineMaxEdges: 8,
+      straightBias: 0.85,
+      rayBias: 0.75
     }
   };
 
@@ -151,7 +173,7 @@
     return components.every((component) => component.length !== 1);
   }
 
-  function chooseComponent(level, freeKeys, random) {
+  function buildWeightedComponents(level, freeKeys) {
     const components = rules
       .getComponentsFromKeys(level, freeKeys)
       .filter((component) => component.length >= 2);
@@ -170,10 +192,41 @@
       }
     }
 
+    return weighted;
+  }
+
+  function pickWeighted(weighted, random) {
     return weighted[Math.floor(random() * weighted.length)];
   }
 
-  function growPath(level, component, targetEdges, freeKeys, random) {
+  function chooseNextStep(neighbors, current, previous, rayKeys, options, random) {
+    // Long "spine" arrows grow straighter so they can span a large fraction of
+    // the board; short fillers prefer cells that sit on a placed arrow's exit
+    // ray, which creates interlocking (the new body blocks an existing arrow).
+    if (options.straightBias && previous) {
+      const dx = Math.sign(current[0] - previous[0]);
+      const dy = Math.sign(current[1] - previous[1]);
+      const straight = neighbors.find(
+        (neighbor) => Math.sign(neighbor[0] - current[0]) === dx && Math.sign(neighbor[1] - current[1]) === dy
+      );
+
+      if (straight && random() < options.straightBias) {
+        return straight;
+      }
+    }
+
+    if (rayKeys && rayKeys.size > 0 && options.rayBias) {
+      const onRay = neighbors.filter((neighbor) => rayKeys.has(pointKey(neighbor)));
+
+      if (onRay.length > 0 && random() < options.rayBias) {
+        return onRay[Math.floor(random() * onRay.length)];
+      }
+    }
+
+    return neighbors[0];
+  }
+
+  function growPath(level, component, targetEdges, freeKeys, random, rayKeys, options = {}) {
     const componentKeys = new Set(component.map(pointKey));
     const starts = shuffle(component, random);
 
@@ -183,6 +236,7 @@
 
       while (path.length - 1 < targetEdges) {
         const current = path[path.length - 1];
+        const previous = path.length >= 2 ? path[path.length - 2] : null;
         const neighbors = shuffle(rules.getPointNeighbors(level, current), random)
           .filter((neighbor) => {
             const key = pointKey(neighbor);
@@ -193,7 +247,7 @@
           break;
         }
 
-        const next = neighbors[0];
+        const next = chooseNextStep(neighbors, current, previous, rayKeys, options, random);
         path.push(clonePoint(next));
         used.add(pointKey(next));
       }
@@ -220,10 +274,15 @@
 
     for (const path of orientations) {
       const arrow = { id, color, path };
+      // Candidate paths are built only from free points, so they are disjoint
+      // from already-placed arrows by construction. Validating the single new
+      // arrow (self-overlap, bounds, head direction) is therefore equivalent to
+      // validating the whole board but O(arrow) instead of O(board). The full
+      // cross-arrow geometry check still runs once in buildReverseCandidate.
       const geometry = rules.validateGeometry({
         pointColumns: level.pointColumns,
         pointRows: level.pointRows,
-        arrows: placedArrows.concat(arrow)
+        arrows: [arrow]
       });
 
       if (!geometry.valid) {
@@ -238,10 +297,13 @@
     return null;
   }
 
-  function scoreInsertion(level, placedArrows, arrow) {
-    const removableBefore = rules.getRemovableArrows(level, placedArrows).length;
+  function scoreInsertion(level, placedArrows, arrow, removableBeforeList) {
+    const removableBefore = removableBeforeList.length;
     const withArrow = placedArrows.concat(arrow);
-    const existingRemovableAfter = placedArrows
+    // Adding an arrow can only block existing arrows, never unblock them, so the
+    // set still removable afterwards is a subset of those removable before. We
+    // only need to re-test that subset instead of every placed arrow.
+    const existingRemovableAfter = removableBeforeList
       .filter((placedArrow) => rules.isArrowRemovable(level, withArrow, placedArrow))
       .length;
     const blockedGain = removableBefore - existingRemovableAfter;
@@ -255,26 +317,76 @@
     );
   }
 
+  function collectExitRayKeys(level, removableList, freeKeys) {
+    const keys = new Set();
+    const maxDistance = Math.max(level.pointColumns, level.pointRows);
+
+    for (const arrow of removableList) {
+      const direction = rules.getHeadDirection(arrow.path);
+
+      if (!direction) {
+        continue;
+      }
+
+      const head = arrow.path[arrow.path.length - 1];
+
+      for (let distance = 1; distance <= maxDistance; distance += 1) {
+        const next = [head[0] + direction.dx * distance, head[1] + direction.dy * distance];
+
+        if (!rules.isInBounds(level, next)) {
+          break;
+        }
+
+        const key = pointKey(next);
+
+        if (freeKeys.has(key)) {
+          keys.add(key);
+        }
+      }
+    }
+
+    return keys;
+  }
+
   function findCandidatePath(level, freeKeys, placedArrows, random, config) {
     const id = `a${placedArrows.length + 1}`;
+    // removableBefore is identical for every candidate in this call (placedArrows
+    // is fixed), so compute it once instead of inside scoreInsertion per attempt.
+    const removableBeforeList = rules.getRemovableArrows(level, placedArrows);
+    // Free cells lying on a currently-removable arrow's exit ray: routing a new
+    // body through them blocks that arrow at the start, creating interlocking.
+    const rayKeys = collectExitRayKeys(level, removableBeforeList, freeKeys);
+    const longLineMinEdges = Math.max(2, Math.ceil(Math.max(level.pointColumns, level.pointRows) * config.longLineRatio));
+    // Free-space components are fixed for this call, so enumerate them once
+    // instead of recomputing inside every attempt.
+    const weighted = buildWeightedComponents(level, freeKeys);
+
+    if (!weighted) {
+      return null;
+    }
+
     let best = null;
 
     for (let attempt = 0; attempt < config.pathAttempts; attempt += 1) {
-      const component = chooseComponent(level, freeKeys, random);
-
-      if (!component) {
-        return null;
-      }
-
+      const component = pickWeighted(weighted, random);
       const maxEdges = Math.min(config.maxEdges, component.length - 1);
       const minEdges = Math.min(config.minEdges, maxEdges);
       let targetEdges = randomInt(random, minEdges, maxEdges);
+      // Occasionally grow a long spine that spans a large share of the board so
+      // arrow lengths vary instead of clustering at the short end.
+      const wantLong = random() < config.longLineChance && component.length - 1 >= longLineMinEdges;
 
-      if (component.length <= config.maxEdges + 1 && random() < 0.55) {
+      if (wantLong) {
+        const longMax = Math.min(config.longLineMaxEdges, component.length - 1);
+        targetEdges = randomInt(random, Math.min(longLineMinEdges, longMax), longMax);
+      } else if (component.length <= config.maxEdges + 1 && random() < 0.55) {
         targetEdges = component.length - 1;
       }
 
-      const rawPoints = growPath(level, component, targetEdges, freeKeys, random);
+      const growOptions = wantLong
+        ? { straightBias: config.straightBias }
+        : { rayBias: config.rayBias };
+      const rawPoints = growPath(level, component, targetEdges, freeKeys, random, rayKeys, growOptions);
 
       if (!rawPoints || rawPoints.length < 2) {
         continue;
@@ -295,7 +407,7 @@
       const arrow = buildArrowCandidate(level, placedArrows, rawPoints, freeAfter, id, config.color, random);
 
       if (arrow) {
-        const score = scoreInsertion(level, placedArrows, arrow);
+        const score = scoreInsertion(level, placedArrows, arrow, removableBeforeList);
         const candidate = {
           arrow,
           freeAfter,
@@ -423,6 +535,8 @@
       pointColumns: options.pointColumns || 7,
       pointRows: options.pointRows || 7,
       maxAttempts: options.maxAttempts || 250,
+      fullSolveMaxCells: options.fullSolveMaxCells || 200,
+      fullSolve: options.fullSolve,
       logFallbackWarning: options.logFallbackWarning !== false,
       difficulty
     };
@@ -446,9 +560,43 @@
     };
   }
 
+  function shouldFullSolve(config) {
+    if (typeof config.fullSolve === "boolean") {
+      return config.fullSolve;
+    }
+
+    return config.pointColumns * config.pointRows <= config.fullSolveMaxCells;
+  }
+
+  function finalizeStats(level, config) {
+    if (!shouldFullSolve(config)) {
+      return level;
+    }
+
+    const full = solver.solveLevel(level, {
+      solutionOrder: level.solutionOrder,
+      requireFullPointCover: true,
+      requireFirstExit: true,
+      solutionCountCap: config.solutionCountCap
+    });
+
+    return {
+      ...level,
+      stats: {
+        ...level.stats,
+        solutionCount: full.solutionCount,
+        solutionCountCapped: full.solutionCountCapped,
+        visitedStates: full.visitedStates,
+        averageBranching: Number(full.averageBranching.toFixed(3)),
+        maxBranching: full.maxBranching
+      }
+    };
+  }
+
   function generateLevel(options = {}) {
     const config = normalizeConfig(options);
     let best = null;
+    let matched = null;
 
     for (let attempt = 0; attempt < config.maxAttempts; attempt += 1) {
       const candidate = buildReverseCandidate(config.seed, config, attempt);
@@ -457,11 +605,8 @@
         continue;
       }
 
-      const stats = solver.solveLevel(candidate, {
-        solutionOrder: candidate.solutionOrder,
-        requireFullPointCover: true,
-        requireFirstExit: true,
-        solutionCountCap: config.solutionCountCap
+      const stats = solver.analyzeLevel(candidate, {
+        solutionOrder: candidate.solutionOrder
       });
 
       if (!stats.solvable || !stats.knownSolutionValid) {
@@ -476,19 +621,22 @@
       }
 
       if (matchesTargets(candidate, stats, config)) {
-        return level;
+        matched = level;
+        break;
       }
     }
 
-    if (best) {
-      if (config.logFallbackWarning) {
-        console.warn("Generated level did not hit every target; using best candidate", best.stats);
-      }
+    const chosen = matched || best;
 
-      return best;
+    if (!chosen) {
+      throw new Error(`Unable to generate a solvable level for seed ${config.seed}`);
     }
 
-    throw new Error(`Unable to generate a solvable level for seed ${config.seed}`);
+    if (!matched && config.logFallbackWarning) {
+      console.warn("Generated level did not hit every target; using best candidate", chosen.stats);
+    }
+
+    return finalizeStats(chosen, config);
   }
 
   window.ArrowPuzzleGenerator = {
