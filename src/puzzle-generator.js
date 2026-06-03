@@ -428,11 +428,12 @@
     const levelShell = {
       pointColumns: config.pointColumns,
       pointRows: config.pointRows,
+      mask: config.mask,
       arrows: []
     };
     let freeKeys = new Set(rules.getAllPointKeys(levelShell));
     const arrows = [];
-    const maxArrows = config.pointColumns * config.pointRows;
+    const maxArrows = freeKeys.size;
 
     while (freeKeys.size > 0) {
       if (arrows.length >= maxArrows) {
@@ -462,6 +463,7 @@
       seed: `${seed}:${attemptIndex}`,
       pointColumns: config.pointColumns,
       pointRows: config.pointRows,
+      mask: config.mask,
       arrows: arrows.map(rules.cloneArrow),
       solutionOrder,
       generated: true,
@@ -522,9 +524,39 @@
     );
   }
 
+  function toMaskSet(mask) {
+    if (!mask) {
+      return undefined;
+    }
+
+    if (mask instanceof Set) {
+      return mask;
+    }
+
+    return new Set(
+      mask.map((item) => (Array.isArray(item) ? rules.pointKey(item[0], item[1]) : item))
+    );
+  }
+
+  function maskBounds(maskSet) {
+    let columns = 0;
+    let rows = 0;
+
+    for (const key of maskSet) {
+      const parts = key.split(",");
+      columns = Math.max(columns, Number(parts[0]) + 1);
+      rows = Math.max(rows, Number(parts[1]) + 1);
+    }
+
+    return { columns, rows };
+  }
+
   function normalizeConfig(options) {
     const difficulty = options.difficulty || "normal";
     const difficultyConfig = DIFFICULTY_CONFIGS[difficulty] || DIFFICULTY_CONFIGS.normal;
+    const mask = toMaskSet(options.mask);
+    // A mask can imply the board size when columns/rows are not given explicitly.
+    const bounds = mask ? maskBounds(mask) : { columns: 0, rows: 0 };
 
     return {
       ...difficultyConfig,
@@ -532,8 +564,9 @@
       id: options.id || 1,
       seed: options.seed || "level-1",
       color: options.color || DEFAULT_COLOR,
-      pointColumns: options.pointColumns || 7,
-      pointRows: options.pointRows || 7,
+      mask,
+      pointColumns: options.pointColumns || bounds.columns || 7,
+      pointRows: options.pointRows || bounds.rows || 7,
       maxAttempts: options.maxAttempts || 250,
       fullSolveMaxCells: options.fullSolveMaxCells || 200,
       fullSolve: options.fullSolve,

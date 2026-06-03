@@ -131,7 +131,9 @@ Node에서 `puzzle-rules.js` → `puzzle-solver.js` → `puzzle-generator.js`를
 
 1. **P4 — 타일 분할-스티칭** (요구사항 1: 100×100). 단일 패스로는 불가, 정공법. 위 1B 설계대로 작은 타일 생성 → 이어붙임 → 전역 선형 재검증 → 경계 타일만 재롤. 절대속도(<0.2s) 목표도 타일 크기로 흡수.
 2. **P5 — easy 튜닝**. 현재 throw=0이나 타깃(init [3,5]) 달성률 낮음(init 5.5~7). 짧은 화살표 과다 → 화살표 수↑ → initialMoves↑. maxEdges/길이분포 재조정 또는 타깃 범위 재검토.
-3. **P6 — 비사각형 점 마스크** (오늘 논의). "보드=사각형" 가정을 **활성 점 집합(mask)** 으로 일반화. 그림 형태로 점 배치 ≡ 사각형 채우고 그림 밖 점 삭제(동일 기능). 풀이 규칙 불변.
-   - 변경 지점: `getAllPointKeys`(마스크 목록), `isInBounds`/`getPointNeighbors`(활성 점 여부), `requireFullPointCover`(마스크 전부 덮기), 제너레이터 초기 `freeKeys`(마스크).
-   - **결정 필요 — 탈출 의미**: (A) 그림 경계=보드 끝(구멍이 출구처럼 작동) vs (B) 바운딩 박스=보드 끝, 구멍은 투명(현재 거동 보존, 추천). `isOuterExit`/`getHeadExitBlock`의 `isInBounds` 종료 조건이 이에 따라 달라짐.
-   - 제약: 화살표는 ≥2 인접 점 필요 → 고립점·1칸 두께 디테일은 거부됨. 그림은 폭 2 이상 채울 수 있는 형태여야 함(기존 `isRemainderPossible`가 이미 싱글톤 거부).
+3. **P6 — 비사각형 점 마스크** (탈출 의미 **B** 채택, 엔진/제너레이터 완료).
+   - 탈출 의미 B: 보드 끝 = 바운딩 박스, 구멍(비활성 셀)은 투명 — 레이가 가로지르며 다른 화살표의 점/엣지에만 막힘. `isInBounds`/`getHeadExitBlock`/`isOuterExit` 불변, 점 멤버십만 마스크로 제한.
+   - 구현: `puzzle-rules.js`에 `isActivePoint`, mask-aware `getAllPointKeys`/`getPointNeighbors`, `validateGeometry` 활성점 검사, 헬퍼 `buildMaskFromRows`(ASCII)·`maskFromPoints`. `puzzle-generator.js`는 `normalizeConfig`에서 mask 정규화(Set/배열/키 허용)·크기 자동추론, `buildReverseCandidate`가 mask를 levelShell/level에 전달.
+   - 검증: diamond(41)/plus(33)/frame 도넛(20) 마스크 모두 allInMask·fullCover·replay·geometry 통과. 도넛이 통과해 구멍 투과 탈출(의미 B) 확인.
+   - 제약(확인됨): 화살표는 ≥2 인접 점 필요 → 고립점·1칸 두께 디테일은 거부. 그림은 활성점이 연결되어 경로로 덮일 수 있는 형태여야 함(`isRemainderPossible`가 싱글톤 거부).
+   - **남은 일**: `src/main.js` 렌더링 — 마스크 점만 그리고 구멍은 비우기(시각 영역, 사용자 판단). 엔진은 마스크를 이미 지원하므로 레벨 데이터에 `mask`만 넣으면 됨.

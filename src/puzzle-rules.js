@@ -52,6 +52,24 @@
     );
   }
 
+  // A level may carry a `mask` (Set of "x,y" keys) describing a non-rectangular
+  // figure. Arrows may only sit on active points. Exit semantics B: the board
+  // edge stays the bounding box and holes (inactive cells) are transparent — an
+  // arrow's exit ray crosses them and is blocked only by another arrow's
+  // points/edges, exactly as on a full rectangle. So isInBounds (used by the
+  // exit ray) is unchanged; only point membership uses the mask.
+  function isActivePoint(level, point) {
+    if (!isInBounds(level, point)) {
+      return false;
+    }
+
+    if (level.mask) {
+      return level.mask.has(pointKey(point[0], point[1]));
+    }
+
+    return true;
+  }
+
   function buildPathMetrics(path) {
     const segments = [];
     let length = 0;
@@ -258,6 +276,10 @@
   }
 
   function getAllPointKeys(level) {
+    if (level.mask) {
+      return [...level.mask];
+    }
+
     const keys = [];
 
     for (let y = 0; y < level.pointRows; y += 1) {
@@ -275,12 +297,36 @@
     for (const direction of Object.values(DIRECTIONS)) {
       const next = [point[0] + direction.dx, point[1] + direction.dy];
 
-      if (isInBounds(level, next)) {
+      if (isActivePoint(level, next)) {
         neighbors.push(next);
       }
     }
 
     return neighbors;
+  }
+
+  // Build a mask from an ASCII grid: a cell is active unless its character is in
+  // `empty` (default space or dot). Returns the mask plus the implied size.
+  function buildMaskFromRows(rows, options = {}) {
+    const empty = options.empty || " .";
+    const mask = new Set();
+    let pointColumns = 0;
+
+    rows.forEach((row, y) => {
+      pointColumns = Math.max(pointColumns, row.length);
+
+      for (let x = 0; x < row.length; x += 1) {
+        if (!empty.includes(row[x])) {
+          mask.add(pointKey(x, y));
+        }
+      }
+    });
+
+    return { mask, pointColumns, pointRows: rows.length };
+  }
+
+  function maskFromPoints(points) {
+    return new Set(points.map((point) => pointKey(point[0], point[1])));
   }
 
   function getComponentsFromKeys(level, keys) {
@@ -387,6 +433,8 @@
       for (const point of occupied.orderedPoints) {
         if (!isInBounds(level, point)) {
           errors.push(`arrow ${arrow.id} point ${pointKey(point[0], point[1])} is out of bounds`);
+        } else if (!isActivePoint(level, point)) {
+          errors.push(`arrow ${arrow.id} point ${pointKey(point[0], point[1])} is not on an active point`);
         }
       }
 
@@ -503,6 +551,9 @@
     parsePointKey,
     edgeKey,
     isInBounds,
+    isActivePoint,
+    buildMaskFromRows,
+    maskFromPoints,
     buildPathMetrics,
     getHeadDirection,
     expandPath,
