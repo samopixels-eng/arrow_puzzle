@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arrow Puzzle</title>
+    <link rel="stylesheet" href="src/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar" aria-label="Game status">
+        <div class="level-pill">
+          <span class="level-label">Level 1</span>
+          <div class="hearts" aria-label="5 hearts">
+            <span class="heart"></span>
+            <span class="heart"></span>
+            <span class="heart"></span>
+            <span class="heart"></span>
+            <span class="heart"></span>
+          </div>
+        </div>
+      </header>
+
+      <main class="game-card">
+        <section class="board-stage" aria-label="Arrow puzzle board">
+          <canvas id="game-canvas" width="420" height="420" aria-label="Level 1 puzzle"></canvas>
+        </section>
+
+        <footer class="game-footer">
+          <span id="remaining-label">12 left</span>
+          <button id="restart-button" type="button">Restart</button>
+        </footer>
+
+        <div id="clear-panel" class="clear-panel" hidden>
+          <p>LEVEL CLEAR</p>
+          <button id="clear-restart" type="button">Next Level</button>
+        </div>
+      </main>
+    </div>
+
+    <script src="src/puzzle-rules.js" defer></script>
+    <script src="src/puzzle-solver.js" defer></script>
+    <script src="src/puzzle-generator.js" defer></script>
+    <script src="src/main.js" defer></script>
+  </body>
+</html>
