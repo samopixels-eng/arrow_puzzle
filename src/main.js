@@ -22,19 +22,57 @@
 
   const LEVELS = [];
 
+  // Each level draws from this rotation. Mask layouts confine arrows to a
+  // non-rectangular figure (exit semantics B: holes are transparent, the board
+  // edge is the bounding box). A layout without `mask` is a plain rectangle.
+  const LEVEL_LAYOUTS = [
+    {
+      name: "gem",
+      difficulty: "normal",
+      mask: ["..###..", ".#####.", "#######", "#######", "#######", ".#####.", "..###.."]
+    },
+    {
+      name: "plus",
+      difficulty: "hard",
+      mask: ["..###..", "..###..", "#######", "#######", "#######", "..###..", "..###.."]
+    },
+    {
+      name: "heart",
+      difficulty: "normal",
+      mask: [".##.##.", "#######", "#######", ".#####.", "..###..", "...#..."]
+    },
+    {
+      name: "square",
+      difficulty: "hard",
+      pointColumns: 6,
+      pointRows: 6
+    }
+  ];
+
   function createLevel(levelNumber) {
-    const level = puzzleGenerator.generateLevel({
+    const layout = LEVEL_LAYOUTS[(levelNumber - 1) % LEVEL_LAYOUTS.length];
+    const options = {
       id: levelNumber,
       seed: `level-${levelNumber}`,
-      pointColumns: 6,
-      pointRows: 6,
-      difficulty: "hard",
+      difficulty: layout.difficulty,
       color: NAVY,
-      maxAttempts: 80,
+      maxAttempts: 120,
       logFallbackWarning: false
-    });
+    };
 
-    console.info(`Generated Level ${levelNumber}`, {
+    if (layout.mask) {
+      const shape = puzzleRules.buildMaskFromRows(layout.mask);
+      options.mask = shape.mask;
+      options.pointColumns = shape.pointColumns;
+      options.pointRows = shape.pointRows;
+    } else {
+      options.pointColumns = layout.pointColumns;
+      options.pointRows = layout.pointRows;
+    }
+
+    const level = puzzleGenerator.generateLevel(options);
+
+    console.info(`Generated Level ${levelNumber} (${layout.name})`, {
       seed: level.seed,
       solutionOrder: level.solutionOrder,
       stats: level.stats
@@ -244,6 +282,7 @@
     const now = timestamp || performance.now();
     ctx.clearRect(0, 0, state.view.size, state.view.size);
     drawBoardBase();
+    drawGridPoints();
     drawArrows(now);
 
     if (state.moving) {
@@ -255,6 +294,26 @@
     ctx.save();
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, state.view.size, state.view.size);
+    ctx.restore();
+  }
+
+  // Draw a dot at every active lattice point so the figure (and its holes) is
+  // visible. Uses the mask-aware point list, so masked levels show their shape.
+  function drawGridPoints() {
+    const radius = Math.max(2, state.view.step * 0.07);
+
+    ctx.save();
+    ctx.fillStyle = "rgba(17, 26, 79, 0.16)";
+
+    for (const key of puzzleRules.getAllPointKeys(state.level)) {
+      const point = puzzleRules.parsePointKey(key);
+      const screenPoint = gridPointToScreen(point);
+
+      ctx.beginPath();
+      ctx.arc(screenPoint.x, screenPoint.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     ctx.restore();
   }
 
