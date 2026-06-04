@@ -213,6 +213,24 @@
 
   function getHeadExitBlock(level, arrows, arrow) {
     const occupied = getArrowOccupancyMap(arrows, arrow.id);
+    // Include the arrow's own body so it cannot exit through itself: if the head
+    // ray crosses this arrow's own points/edges it is blocked. The ray starts one
+    // cell past the head, so a normal arrow (whose body trails behind the head)
+    // is unaffected; only an arrow that curls in front of its own head is caught.
+    const own = expandPath(arrow.path);
+
+    for (const point of own.points) {
+      if (!occupied.points.has(point)) {
+        occupied.points.set(point, arrow.id);
+      }
+    }
+
+    for (const edge of own.edges) {
+      if (!occupied.edges.has(edge)) {
+        occupied.edges.set(edge, arrow.id);
+      }
+    }
+
     const direction = getHeadDirection(arrow.path);
 
     if (!direction) {
