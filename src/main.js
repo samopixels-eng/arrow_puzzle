@@ -2,88 +2,60 @@
   "use strict";
 
   const puzzleRules = window.ArrowPuzzleRules;
-  const puzzleGenerator = window.ArrowPuzzleGenerator;
+  const appConfig = window.ARROW_PUZZLE_CONFIG || {};
 
-  if (!puzzleRules || !puzzleGenerator) {
-    throw new Error("Puzzle rules and generator scripts must load before main.js");
+  if (!puzzleRules) {
+    throw new Error("Puzzle rules must load before main.js");
   }
+
+  if (!Array.isArray(window.ARROW_PUZZLE_LEVELS)) {
+    throw new Error("Saved levels must be defined in src/levels.js as window.ARROW_PUZZLE_LEVELS.");
+  }
+
+  const storedLevels = window.ARROW_PUZZLE_LEVELS;
 
   const NAVY = "#111a4f";
   const DANGER = "#ff385c";
+  const DEBUG_FILL = "rgba(255, 56, 92, 0.08)";
+  const DEBUG_STROKE = "rgba(255, 56, 92, 0.45)";
+  const DEBUG_POINT = "#ff385c";
+  const DEBUG_LABEL_FILL = "#ffffff";
+  const DEBUG_LABEL_STROKE = "#111827";
   const EXIT_DURATION_MS = 960;
   const BLOCKED_TRAVEL_MS = 240;
   const BLOCKED_RETURN_MS = 300;
   const JITTER_DURATION_MS = 200;
   const JITTER_CYCLES = 6;
   const SHAKE_DISTANCE = 0.09;
-  const MIN_TOUCH_RADIUS = 30;
+  const MIN_TOUCH_RADIUS = 50;
   const TOUCH_RADIUS_MULTIPLIER = 2.75;
   const ZERO_JITTER = { x: 0, y: 0 };
 
-  const LEVELS = [];
-
-  // Each level draws from this rotation. Mask layouts confine arrows to a
-  // non-rectangular figure (exit semantics B: holes are transparent, the board
-  // edge is the bounding box). A layout without `mask` is a plain rectangle.
-  const LEVEL_LAYOUTS = [
-    {
-      name: "gem",
-      difficulty: "normal",
-      mask: ["..###..", ".#####.", "#######", "#######", "#######", ".#####.", "..###.."]
-    },
-    {
-      name: "plus",
-      difficulty: "hard",
-      mask: ["..###..", "..###..", "#######", "#######", "#######", "..###..", "..###.."]
-    },
-    {
-      name: "heart",
-      difficulty: "normal",
-      mask: [".##.##.", "#######", "#######", ".#####.", "..###..", "...#..."]
-    },
-    {
-      name: "square",
-      difficulty: "hard",
-      pointColumns: 6,
-      pointRows: 6
-    }
-  ];
-
-  function createLevel(levelNumber) {
-    const layout = LEVEL_LAYOUTS[(levelNumber - 1) % LEVEL_LAYOUTS.length];
-    const options = {
-      id: levelNumber,
-      seed: `level-${levelNumber}`,
-      difficulty: layout.difficulty,
-      color: NAVY,
-      maxAttempts: 120,
-      logFallbackWarning: false
+  function normalizeStoredLevel(level, index) {
+    return {
+      ...level,
+      id: level.id || index + 1,
+      mask: level.mask ? new Set(level.mask) : undefined,
+      arrows: level.arrows.map((arrow) => ({
+        ...arrow,
+        color: arrow.color || NAVY,
+        path: arrow.path.map((point) => [...point])
+      })),
+      solutionOrder: level.solutionOrder ? [...level.solutionOrder] : undefined,
+      stats: level.stats ? { ...level.stats } : undefined
     };
+  }
 
-    if (layout.mask) {
-      const shape = puzzleRules.buildMaskFromRows(layout.mask);
-      options.mask = shape.mask;
-      options.pointColumns = shape.pointColumns;
-      options.pointRows = shape.pointRows;
-    } else {
-      options.pointColumns = layout.pointColumns;
-      options.pointRows = layout.pointRows;
-    }
+  const LEVELS = storedLevels.map(normalizeStoredLevel);
+  const MAX_LEVELS = LEVELS.length;
 
-    const level = puzzleGenerator.generateLevel(options);
-
-    console.info(`Generated Level ${levelNumber} (${layout.name})`, {
-      seed: level.seed,
-      solutionOrder: level.solutionOrder,
-      stats: level.stats
-    });
-
-    return level;
+  function hasLevelIndex(levelIndex) {
+    return Number.isSafeInteger(levelIndex) && levelIndex >= 0 && levelIndex < MAX_LEVELS;
   }
 
   function getLevel(levelIndex) {
-    if (!LEVELS[levelIndex]) {
-      LEVELS[levelIndex] = createLevel(levelIndex + 1);
+    if (!hasLevelIndex(levelIndex)) {
+      return null;
     }
 
     return LEVELS[levelIndex];
@@ -95,6 +67,7 @@
   const remainingLabel = document.getElementById("remaining-label");
   const restartButton = document.getElementById("restart-button");
   const clearPanel = document.getElementById("clear-panel");
+  const clearPanelTitle = clearPanel.querySelector("p");
   const clearActionButton = document.getElementById("clear-restart");
 
   const state = {
@@ -103,15 +76,28 @@
     arrows: [],
     view: null,
     moving: null,
-    complete: false
+    complete: false,
+    debugOrderLimit: null
   };
+
+  let devStageInput = null;
+  let devStageStatus = null;
+  let debugOrderPanel = null;
+  let debugOrderRange = null;
+  let debugOrderStatus = null;
 
   function cloneLevel(level) {
     return puzzleRules.cloneLevel(level);
   }
 
   function loadLevel(levelIndex) {
-    const level = cloneLevel(getLevel(levelIndex));
+    const sourceLevel = getLevel(levelIndex);
+
+    if (!sourceLevel) {
+      return false;
+    }
+
+    const level = cloneLevel(sourceLevel);
     state.levelIndex = levelIndex;
     state.level = level;
     state.arrows = level.arrows.map((arrow) => ({
@@ -120,27 +106,50 @@
     }));
     state.moving = null;
     state.complete = false;
+    state.debugOrderLimit = level.debugPreview ? Math.min(1, level.arrows.length) : null;
     clearPanel.hidden = true;
+    clearPanelTitle.textContent = "LEVEL CLEAR";
+    clearActionButton.disabled = false;
     clearActionButton.textContent = "Next Level";
     updateLevelLabel();
     updateRemainingLabel();
+    syncDevStagePicker();
+    syncDebugOrderPanel();
     calculateView();
     validateLevelGeometry();
     render();
+    return true;
   }
 
   function resetLevel() {
-    loadLevel(state.levelIndex);
+    return loadLevel(state.levelIndex);
   }
 
   function loadNextLevel() {
-    loadLevel(state.levelIndex + 1);
+    if (isLastLevel()) {
+      return false;
+    }
+
+    return loadLevel(state.levelIndex + 1);
+  }
+
+  function loadLevelNumber(levelNumber) {
+    if (!Number.isSafeInteger(levelNumber) || levelNumber < 1 || levelNumber > MAX_LEVELS) {
+      return false;
+    }
+
+    return loadLevel(levelNumber - 1);
+  }
+
+  function isLastLevel() {
+    return state.levelIndex >= MAX_LEVELS - 1;
   }
 
   function updateLevelLabel() {
     const levelNumber = state.levelIndex + 1;
-    levelLabel.textContent = `Level ${levelNumber}`;
-    canvas.setAttribute("aria-label", `Level ${levelNumber} puzzle`);
+    const label = state.level.debugPreview ? `Debug ${levelNumber}` : `Level ${levelNumber}`;
+    levelLabel.textContent = label;
+    canvas.setAttribute("aria-label", `${label} puzzle`);
   }
 
   function getPointAtDistance(route, distance) {
@@ -249,24 +258,33 @@
   }
 
   function calculateView() {
-    const rect = canvas.getBoundingClientRect();
-    const size = Math.max(280, Math.floor(rect.width || 420));
+    const container = canvas.parentElement;
+    const available = Math.max(280, Math.floor((container && container.clientWidth) || 420));
+    const baseSize = Math.min(420, available);
     const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
 
-    canvas.width = Math.round(size * dpr);
-    canvas.height = Math.round(size * dpr);
-    canvas.style.height = `${size}px`;
+    // Point spacing is fixed to what a 10-wide board uses at the base width, so
+    // density never changes. Larger boards grow the canvas (and the board-stage
+    // scrolls) instead of cramming points closer together.
+    const REFERENCE_COLUMNS = 10;
+    const paddingRatio = 0.13;
+    const padding = baseSize * paddingRatio;
+    const step = (baseSize - padding * 2) / (REFERENCE_COLUMNS - 1);
+
+    const width = padding * 2 + step * (state.level.pointColumns - 1);
+    const height = padding * 2 + step * (state.level.pointRows - 1);
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const padding = size * 0.13;
-    const boardSize = size - padding * 2;
-    const step = boardSize / (state.level.pointColumns - 1);
-
     state.view = {
-      size,
+      width,
+      height,
       boardX: padding,
       boardY: padding,
-      boardSize,
       step,
       lineWidth: Math.max(6, step * 0.11),
       headLength: Math.max(16, step * 0.42),
@@ -280,9 +298,10 @@
     }
 
     const now = timestamp || performance.now();
-    ctx.clearRect(0, 0, state.view.size, state.view.size);
+    ctx.clearRect(0, 0, state.view.width, state.view.height);
     drawBoardBase();
     drawGridPoints();
+    drawDebugOverlay();
     drawArrows(now);
 
     if (state.moving) {
@@ -293,7 +312,7 @@
   function drawBoardBase() {
     ctx.save();
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, state.view.size, state.view.size);
+    ctx.fillRect(0, 0, state.view.width, state.view.height);
     ctx.restore();
   }
 
@@ -317,10 +336,61 @@
     ctx.restore();
   }
 
+  function drawDebugOverlay() {
+    if (!state.level.debugPreview || !state.level.debug) {
+      return;
+    }
+
+    drawDebugTile(state.level.debug.tile);
+    drawDebugFreePoints(state.level.debug.freeKeys || []);
+  }
+
+  function drawDebugTile(tile) {
+    if (!tile) {
+      return;
+    }
+
+    const left = state.view.boardX + (tile.x - 0.45) * state.view.step;
+    const top = state.view.boardY + (tile.y - 0.45) * state.view.step;
+    const width = Math.max(state.view.step, (tile.width - 1 + 0.9) * state.view.step);
+    const height = Math.max(state.view.step, (tile.height - 1 + 0.9) * state.view.step);
+
+    ctx.save();
+    ctx.fillStyle = DEBUG_FILL;
+    ctx.strokeStyle = DEBUG_STROKE;
+    ctx.lineWidth = Math.max(2, state.view.step * 0.04);
+    ctx.fillRect(left, top, width, height);
+    ctx.strokeRect(left, top, width, height);
+    ctx.restore();
+  }
+
+  function drawDebugFreePoints(freeKeys) {
+    if (freeKeys.length === 0) {
+      return;
+    }
+
+    const radius = Math.max(4, state.view.step * 0.13);
+
+    ctx.save();
+    ctx.fillStyle = DEBUG_POINT;
+
+    for (const key of freeKeys) {
+      const point = puzzleRules.parsePointKey(key);
+      const screenPoint = gridPointToScreen(point);
+
+      ctx.beginPath();
+      ctx.arc(screenPoint.x, screenPoint.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
   function drawArrows(timestamp) {
     const movingId = state.moving ? state.moving.id : null;
+    const visibleArrows = getDebugVisibleArrows();
 
-    for (const arrow of state.arrows) {
+    for (const arrow of visibleArrows) {
       if (arrow.id !== movingId) {
         drawArrowPath(arrow.path, arrow.color);
       }
@@ -334,6 +404,16 @@
         finishMoving();
       }
     }
+
+    drawDebugOrderLabels(visibleArrows);
+  }
+
+  function getDebugVisibleArrows() {
+    if (!state.level.debugPreview || state.debugOrderLimit === null) {
+      return state.arrows;
+    }
+
+    return state.arrows.slice(0, state.debugOrderLimit);
   }
 
   function getMovingPathState(move, timestamp) {
@@ -461,6 +541,39 @@
     ctx.lineTo(-length, width * 0.5);
     ctx.closePath();
     ctx.fill();
+    ctx.restore();
+  }
+
+  function drawDebugOrderLabels(arrows) {
+    if (!state.level.debugPreview) {
+      return;
+    }
+
+    for (const arrow of arrows) {
+      const order = state.level.arrows.findIndex((candidate) => candidate.id === arrow.id) + 1;
+
+      if (order > 0) {
+        drawDebugOrderLabel(arrow, order);
+      }
+    }
+  }
+
+  function drawDebugOrderLabel(arrow, order) {
+    const head = gridPointToScreen(arrow.path[arrow.path.length - 1]);
+    const radius = Math.max(9, state.view.step * 0.18);
+    const text = String(order);
+
+    ctx.save();
+    ctx.fillStyle = DEBUG_LABEL_STROKE;
+    ctx.beginPath();
+    ctx.arc(head.x, head.y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = DEBUG_LABEL_FILL;
+    ctx.font = `800 ${Math.max(10, radius * 0.95)}px Inter, ui-sans-serif, system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, head.x, head.y + 0.5);
     ctx.restore();
   }
 
@@ -669,12 +782,33 @@
     if (state.arrows.length === 0) {
       state.complete = true;
       clearPanel.hidden = false;
+      updateClearPanel();
     }
 
     render();
   }
 
+  function updateClearPanel() {
+    if (isLastLevel()) {
+      clearPanelTitle.textContent = "ALL CLEAR";
+      clearActionButton.textContent = "Complete";
+      clearActionButton.disabled = true;
+      return;
+    }
+
+    clearPanelTitle.textContent = "LEVEL CLEAR";
+    clearActionButton.textContent = "Next Level";
+    clearActionButton.disabled = false;
+  }
+
   function updateRemainingLabel() {
+    if (state.level.debugPreview && state.level.debug) {
+      const openCount = state.level.debug.freeKeys ? state.level.debug.freeKeys.length : 0;
+      const visibleCount = state.debugOrderLimit || state.arrows.length;
+      remainingLabel.textContent = `Debug: ${visibleCount}/${state.arrows.length} placed / ${openCount} open`;
+      return;
+    }
+
     const count = state.arrows.length;
     remainingLabel.textContent = count === 1 ? "1 left" : `${count} left`;
   }
@@ -688,27 +822,180 @@
     render();
   }
 
+  function setupDevStagePicker() {
+    if (!appConfig.devMode) {
+      return;
+    }
+
+    const panel = document.createElement("aside");
+    panel.className = "dev-stage-picker";
+    panel.setAttribute("aria-label", "Development stage picker");
+    panel.innerHTML = [
+      '<div class="dev-stage-title">DEV</div>',
+      '<label class="dev-stage-field">',
+      '<span>Stage</span>',
+      `<input id="dev-stage-input" type="number" min="1" max="${MAX_LEVELS}" step="1" inputmode="numeric" aria-label="Stage number">`,
+      '</label>',
+      '<div class="dev-stage-actions">',
+      '<button type="button" data-dev-stage-step="-1" aria-label="Previous stage">-</button>',
+      '<button type="button" data-dev-stage-play aria-label="Load stage">Go</button>',
+      '<button type="button" data-dev-stage-step="1" aria-label="Next stage">+</button>',
+      '</div>',
+      '<p class="dev-stage-status" aria-live="polite"></p>'
+    ].join("");
+
+    document.body.appendChild(panel);
+
+    devStageInput = panel.querySelector("#dev-stage-input");
+    devStageStatus = panel.querySelector(".dev-stage-status");
+
+    const playStage = (levelNumber) => {
+      try {
+        if (loadLevelNumber(levelNumber)) {
+          return;
+        }
+
+        devStageStatus.textContent = `Enter 1-${MAX_LEVELS}`;
+        devStageInput.focus();
+      } catch (error) {
+        console.error("Dev stage load failed", { levelNumber, error });
+        devStageStatus.textContent = "Level load failed";
+      }
+    };
+
+    const playSelectedStage = () => {
+      const levelNumber = Math.floor(Number(devStageInput.value));
+      playStage(levelNumber);
+    };
+
+    panel.querySelector("[data-dev-stage-play]").addEventListener("click", playSelectedStage);
+    devStageInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        playSelectedStage();
+      }
+    });
+
+    for (const button of panel.querySelectorAll("[data-dev-stage-step]")) {
+      button.addEventListener("click", () => {
+        const delta = Number(button.dataset.devStageStep);
+        const current = Math.max(1, Math.floor(Number(devStageInput.value)) || state.levelIndex + 1);
+        playStage(Math.max(1, Math.min(MAX_LEVELS, current + delta)));
+      });
+    }
+
+    syncDevStagePicker();
+  }
+
+  function setupDebugOrderPanel() {
+    debugOrderPanel = document.createElement("aside");
+    debugOrderPanel.className = "debug-order-panel";
+    debugOrderPanel.setAttribute("aria-label", "Debug placement order");
+    debugOrderPanel.hidden = true;
+    debugOrderPanel.innerHTML = [
+      '<div class="debug-order-title">ORDER</div>',
+      '<input id="debug-order-range" type="range" min="1" max="1" value="1" step="1" aria-label="Visible placed arrows">',
+      '<div class="debug-order-actions">',
+      '<button type="button" data-debug-order-step="-1" aria-label="Previous placement">-</button>',
+      '<button type="button" data-debug-order-all aria-label="Show all placements">All</button>',
+      '<button type="button" data-debug-order-step="1" aria-label="Next placement">+</button>',
+      '</div>',
+      '<p class="debug-order-status" aria-live="polite"></p>'
+    ].join("");
+
+    document.body.appendChild(debugOrderPanel);
+
+    debugOrderRange = debugOrderPanel.querySelector("#debug-order-range");
+    debugOrderStatus = debugOrderPanel.querySelector(".debug-order-status");
+
+    debugOrderRange.addEventListener("input", () => {
+      setDebugOrderLimit(Number(debugOrderRange.value));
+    });
+
+    debugOrderPanel.querySelector("[data-debug-order-all]").addEventListener("click", () => {
+      setDebugOrderLimit(state.arrows.length);
+    });
+
+    for (const button of debugOrderPanel.querySelectorAll("[data-debug-order-step]")) {
+      button.addEventListener("click", () => {
+        setDebugOrderLimit((state.debugOrderLimit || 1) + Number(button.dataset.debugOrderStep));
+      });
+    }
+  }
+
+  function setDebugOrderLimit(limit) {
+    if (!state.level || !state.level.debugPreview) {
+      return;
+    }
+
+    state.debugOrderLimit = Math.max(1, Math.min(state.arrows.length, Math.floor(limit) || 1));
+    syncDebugOrderPanel();
+    updateRemainingLabel();
+    render();
+  }
+
+  function syncDebugOrderPanel() {
+    if (!debugOrderPanel || !debugOrderRange || !debugOrderStatus) {
+      return;
+    }
+
+    const enabled = Boolean(state.level && state.level.debugPreview);
+    debugOrderPanel.hidden = !enabled;
+
+    if (!enabled) {
+      return;
+    }
+
+    const limit = state.debugOrderLimit || state.arrows.length;
+    debugOrderRange.max = String(Math.max(1, state.arrows.length));
+    debugOrderRange.value = String(limit);
+    debugOrderStatus.textContent = `${limit}/${state.arrows.length}`;
+
+    debugOrderPanel.querySelector('[data-debug-order-step="-1"]').disabled = limit <= 1;
+    debugOrderPanel.querySelector('[data-debug-order-step="1"]').disabled = limit >= state.arrows.length;
+  }
+
+  function syncDevStagePicker() {
+    if (!devStageInput || !devStageStatus) {
+      return;
+    }
+
+    const levelNumber = state.levelIndex + 1;
+    devStageInput.value = String(levelNumber);
+    devStageStatus.textContent = `Loaded ${levelNumber}/${MAX_LEVELS}`;
+
+    const panel = devStageInput.closest(".dev-stage-picker");
+    panel.querySelector('[data-dev-stage-step="-1"]').disabled = levelNumber <= 1;
+    panel.querySelector('[data-dev-stage-step="1"]').disabled = levelNumber >= MAX_LEVELS;
+  }
+
   canvas.addEventListener("pointerdown", handlePointerDown);
   restartButton.addEventListener("click", resetLevel);
   clearActionButton.addEventListener("click", loadNextLevel);
   window.addEventListener("resize", handleResize);
 
-  resetLevel();
+  setupDebugOrderPanel();
+  setupDevStagePicker();
+  if (!resetLevel()) {
+    throw new Error("No saved levels found. Run the generator to create src/levels.js.");
+  }
 
   window.arrowPuzzle = {
     reset: resetLevel,
     nextLevel: loadNextLevel,
-    generateLevel: puzzleGenerator.generateLevel,
+    loadLevel: loadLevelNumber,
     solveLevel: window.ArrowPuzzleSolver.solveLevel,
     getState() {
       return {
         levelId: state.level.id,
         levelNumber: state.levelIndex + 1,
-        generatedLevelCount: LEVELS.filter(Boolean).length,
+        totalLevels: MAX_LEVELS,
+        isLastLevel: isLastLevel(),
+        savedLevelCount: LEVELS.length,
         seed: state.level.seed,
         remaining: state.arrows.length,
         complete: state.complete,
         moving: state.moving ? state.moving.id : null,
+        debug: state.level.debug ? { ...state.level.debug } : null,
         solutionOrder: state.level.solutionOrder ? [...state.level.solutionOrder] : null,
         stats: state.level.stats ? { ...state.level.stats } : null,
         arrows: state.arrows.map((arrow) => ({

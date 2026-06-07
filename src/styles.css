@@ -8,6 +8,8 @@
   --accent: #2f8cff;
   --danger: #ff385c;
   --success: #1f9d63;
+  --dev-panel: rgba(17, 24, 39, 0.92);
+  --dev-line: rgba(255, 255, 255, 0.18);
 }
 
 * {
@@ -110,16 +112,18 @@ button {
 
 .board-stage {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: block;
+  overflow: auto;
+  text-align: center;
   padding: clamp(18px, 7vw, 34px) clamp(12px, 5vw, 26px) 16px;
   min-height: min(74vh, 500px);
 }
 
+/* The canvas is sized explicitly in px by main.js (fixed point spacing). It
+   centres when it fits the stage and scrolls when a large board overflows. */
 #game-canvas {
-  width: min(100%, 420px);
-  aspect-ratio: 1;
-  display: block;
+  display: inline-block;
+  max-width: none;
   touch-action: none;
   user-select: none;
 }
@@ -153,6 +157,12 @@ button {
   transform: translateY(1px);
 }
 
+#clear-restart:disabled {
+  cursor: default;
+  opacity: 0.55;
+  transform: none;
+}
+
 .clear-panel {
   position: absolute;
   inset: 0;
@@ -175,6 +185,172 @@ button {
   font-size: clamp(26px, 9vw, 42px);
   font-weight: 900;
   letter-spacing: 0;
+}
+
+.dev-stage-picker {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  max-width: calc(100vw - 16px);
+  min-height: 30px;
+  padding: 4px;
+  border: 1px solid var(--dev-line);
+  border-radius: 8px;
+  background: var(--dev-panel);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.18);
+}
+
+.dev-stage-title {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 2px;
+  color: #8cc5ff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.dev-stage-field {
+  display: block;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.dev-stage-field span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.dev-stage-field input {
+  width: 42px;
+  height: 24px;
+  border: 1px solid var(--dev-line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font: inherit;
+  font-size: 12px;
+  outline: 0;
+  padding: 0 4px;
+}
+
+.dev-stage-field input:focus {
+  border-color: #8cc5ff;
+}
+
+.dev-stage-actions {
+  display: flex;
+  gap: 3px;
+  margin: 0;
+}
+
+.dev-stage-actions button {
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.dev-stage-actions button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.dev-stage-actions [data-dev-stage-play] {
+  background: var(--accent);
+}
+
+.dev-stage-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.debug-order-panel {
+  position: fixed;
+  right: 8px;
+  bottom: 8px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: auto minmax(96px, 150px);
+  align-items: center;
+  gap: 5px 8px;
+  max-width: calc(100vw - 16px);
+  padding: 8px;
+  border: 1px solid var(--dev-line);
+  border-radius: 8px;
+  background: var(--dev-panel);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.18);
+}
+
+.debug-order-panel[hidden] {
+  display: none;
+}
+
+.debug-order-title {
+  color: #8cc5ff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.debug-order-panel input[type="range"] {
+  width: 100%;
+}
+
+.debug-order-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 4px;
+}
+
+.debug-order-actions button {
+  min-width: 34px;
+  min-height: 26px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.debug-order-actions button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.debug-order-actions [data-debug-order-all] {
+  background: var(--accent);
+}
+
+.debug-order-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
 }
 
 @media (min-width: 720px) {

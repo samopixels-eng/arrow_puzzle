@@ -23,6 +23,7 @@
     return {
       ...level,
       arrows: level.arrows.map(cloneArrow),
+      mask: level.mask ? new Set(level.mask) : undefined,
       solutionOrder: level.solutionOrder ? [...level.solutionOrder] : undefined,
       stats: level.stats ? { ...level.stats } : undefined
     };
