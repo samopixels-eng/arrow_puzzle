@@ -1,0 +1,684 @@
+{
+  "contractVersion": 1,
+  "sceneId": "buy-timer-popup",
+  "sceneName": "buy_timer_popup",
+  "canvas": {
+    "width": 390,
+    "height": 844
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "background": {
+    "type": "none",
+    "color": "#16213e",
+    "color2": "#0e4a8c",
+    "gradientAngle": 180,
+    "imagePath": "",
+    "tileSize": 64,
+    "stretchMode": "cover",
+    "scrollEnabled": false,
+    "scrollDirection": "right",
+    "scrollDuration": 4
+  },
+  "groups": [
+    {
+      "name": "buy_timer_popup",
+      "layerStableIds": [
+        "level-display-panel-431",
+        "level-display-432",
+        "close-button-433",
+        "item-434",
+        "buy-refill-435"
+      ]
+    }
+  ],
+  "sceneAnimations": [],
+  "layers": [
+    {
+      "stableId": "level-display-panel-431",
+      "layerType": "component",
+      "displayName": "level_display_panel",
+      "x": 56,
+      "y": 251,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 1,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 280,
+            "height": 300,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#3a7bd5",
+            "color2": "#1e4ca0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2.5,
+            "color": "#7ab3f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 6,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 8,
+              "blur": 20,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "level-display-432",
+      "layerType": "component",
+      "displayName": "level_display",
+      "x": 106,
+      "y": 232,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 2,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 180,
+            "height": 60,
+            "radius": 15,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#4a90d9",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 6,
+              "blur": 12,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 20
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Pocket Watch",
+          "bindingKey": "",
+          "fontSize": 23,
+          "fontWeight": "normal",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 5,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "close-button-433",
+      "layerType": "component",
+      "displayName": "Close Button",
+      "x": 300,
+      "y": 239,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 3,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "circle",
+            "width": 36,
+            "height": 36,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#ff4d4d",
+            "color2": "#c90000",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#ff8080"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 3,
+              "color": "#800000"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 3,
+              "blur": 6,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "✕",
+          "bindingKey": "",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 40
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "close_buytimer_popup"
+        }
+      ]
+    },
+    {
+      "stableId": "item-434",
+      "layerType": "component",
+      "displayName": "item",
+      "x": 71,
+      "y": 310,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 4,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 250,
+            "height": 160,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#f5f5f5",
+            "color2": "#1e4ca0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 4,
+            "color": "#1534b2"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": -11,
+              "y": -13,
+              "blur": 20,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 5,
+              "y": 5,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": [
+          {
+            "exportPath": "item_clock.webp",
+            "imageKey": "",
+            "width": 70,
+            "height": 70,
+            "offsetX": -13,
+            "offsetY": -13,
+            "zIndex": 2,
+            "style": {
+              "shadow": {
+                "enabled": false,
+                "x": 0,
+                "y": 4,
+                "blur": 8,
+                "color": "#000000",
+                "opacity": 50
+              }
+            }
+          }
+        ]
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Adds 30 seconds",
+          "bindingKey": "",
+          "fontSize": 24,
+          "fontWeight": "normal",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 45,
+          "zIndex": 3,
+          "style": {
+            "stroke": {
+              "width": 3,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        },
+        {
+          "slotIndex": 1,
+          "staticContent": "X3",
+          "bindingKey": "",
+          "fontSize": 30,
+          "fontWeight": "normal",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 35,
+          "offsetY": 7,
+          "zIndex": 3,
+          "style": {
+            "stroke": {
+              "width": 3,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "buy-refill-435",
+      "layerType": "component",
+      "displayName": "buy_refill",
+      "x": 105,
+      "y": 479,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 5,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 180,
+            "height": 56,
+            "radius": 14,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#8cc63f",
+            "color2": "#e65100",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#000000"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 5,
+              "color": "#b33a00"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 26
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 4,
+              "y": 4,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 56
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": [
+          {
+            "exportPath": "assets/coin.webp",
+            "imageKey": "",
+            "width": 25,
+            "height": 25,
+            "offsetX": -20,
+            "offsetY": 13,
+            "zIndex": 2,
+            "style": {
+              "shadow": {
+                "enabled": false,
+                "x": 0,
+                "y": 4,
+                "blur": 8,
+                "color": "#000000",
+                "opacity": 50
+              }
+            }
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Buy",
+          "bindingKey": "",
+          "fontSize": 20,
+          "fontWeight": "normal",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": -13,
+          "style": {
+            "stroke": {
+              "width": 3,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        },
+        {
+          "slotIndex": 1,
+          "staticContent": "900",
+          "bindingKey": "",
+          "fontSize": 18,
+          "fontWeight": "normal",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 13,
+          "offsetY": 13,
+          "zIndex": 3,
+          "style": {
+            "stroke": {
+              "width": 3,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "buy_timer"
+        }
+      ]
+    }
+  ]
+}

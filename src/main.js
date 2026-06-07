@@ -29,6 +29,11 @@
   const SHAKE_DISTANCE = 0.09;
   const MIN_TOUCH_RADIUS = 50;
   const TOUCH_RADIUS_MULTIPLIER = 2.75;
+  const VIEWPORT_PADDING = 24;
+  const MIN_CAMERA_SCALE = 0.4;
+  const MAX_CAMERA_SCALE = 3;
+  const TAP_MOVE_THRESHOLD = 10;
+  const WHEEL_ZOOM_SPEED = 0.0015;
   const ZERO_JITTER = { x: 0, y: 0 };
 
   function normalizeStoredLevel(level, index) {
@@ -75,16 +80,22 @@
     level: null,
     arrows: [],
     view: null,
+    camera: null,
     moving: null,
     complete: false,
     debugOrderLimit: null
   };
+
+  const activePointers = new Map();
+  let gesture = null;
 
   let devStageInput = null;
   let devStageStatus = null;
   let debugOrderPanel = null;
   let debugOrderRange = null;
   let debugOrderStatus = null;
+  let outgameMode = Boolean(appConfig.outgameMode);
+  let outgameCallbacks = {};
 
   function cloneLevel(level) {
     return puzzleRules.cloneLevel(level);
@@ -115,7 +126,7 @@
     updateRemainingLabel();
     syncDevStagePicker();
     syncDebugOrderPanel();
-    calculateView();
+    calculateView({ resetCamera: true });
     validateLevelGeometry();
     render();
     return true;
@@ -257,32 +268,38 @@
     }
   }
 
-  function calculateView() {
+  function calculateView(options = {}) {
     const container = canvas.parentElement;
-    const available = Math.max(280, Math.floor((container && container.clientWidth) || 420));
-    const baseSize = Math.min(420, available);
+    const viewportWidth = Math.max(1, Math.floor((container && container.clientWidth) || 420));
+    const viewportHeight = Math.max(1, Math.floor((container && container.clientHeight) || viewportWidth));
+    const baseSize = Math.min(420, Math.max(280, viewportWidth));
     const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
 
     // Point spacing is fixed to what a 10-wide board uses at the base width, so
-    // density never changes. Larger boards grow the canvas (and the board-stage
-    // scrolls) instead of cramming points closer together.
+    // density never changes. Larger boards grow the world; the canvas remains a
+    // fixed viewport and the camera handles zoom and pan.
     const REFERENCE_COLUMNS = 10;
     const paddingRatio = 0.13;
     const padding = baseSize * paddingRatio;
     const step = (baseSize - padding * 2) / (REFERENCE_COLUMNS - 1);
 
-    const width = padding * 2 + step * (state.level.pointColumns - 1);
-    const height = padding * 2 + step * (state.level.pointRows - 1);
+    const worldWidth = padding * 2 + step * (state.level.pointColumns - 1);
+    const worldHeight = padding * 2 + step * (state.level.pointRows - 1);
 
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.width = Math.round(viewportWidth * dpr);
+    canvas.height = Math.round(viewportHeight * dpr);
+    canvas.style.width = `${viewportWidth}px`;
+    canvas.style.height = `${viewportHeight}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+    const previousView = state.view;
+    const previousCamera = state.camera;
+
     state.view = {
-      width,
-      height,
+      width: viewportWidth,
+      height: viewportHeight,
+      worldWidth,
+      worldHeight,
       boardX: padding,
       boardY: padding,
       step,
@@ -290,19 +307,128 @@
       headLength: Math.max(16, step * 0.42),
       headWidth: Math.max(18, step * 0.48)
     };
+
+    if (!previousCamera || options.resetCamera) {
+      resetCameraToFit();
+      return;
+    }
+
+    preserveCameraCenter(previousView, previousCamera);
+  }
+
+  function getFitScale() {
+    const horizontalPadding = Math.min(VIEWPORT_PADDING, state.view.width * 0.08);
+    const verticalPadding = Math.min(VIEWPORT_PADDING, state.view.height * 0.08);
+    const availableWidth = Math.max(1, state.view.width - horizontalPadding * 2);
+    const availableHeight = Math.max(1, state.view.height - verticalPadding * 2);
+    const fitScale = Math.min(
+      availableWidth / state.view.worldWidth,
+      availableHeight / state.view.worldHeight
+    );
+
+    return Math.max(MIN_CAMERA_SCALE, Math.min(1, fitScale));
+  }
+
+  function resetCameraToFit() {
+    const scale = getFitScale();
+
+    state.camera = {
+      x: 0,
+      y: 0,
+      scale,
+      minScale: scale,
+      maxScale: Math.max(MAX_CAMERA_SCALE, scale * 8)
+    };
+
+    centerCamera();
+    clampCamera();
+  }
+
+  function preserveCameraCenter(previousView, previousCamera) {
+    const center = previousView
+      ? {
+          x: (previousView.width * 0.5 - previousCamera.x) / previousCamera.scale,
+          y: (previousView.height * 0.5 - previousCamera.y) / previousCamera.scale
+        }
+      : {
+          x: state.view.worldWidth * 0.5,
+          y: state.view.worldHeight * 0.5
+        };
+
+    const fitScale = getFitScale();
+    const scale = Math.max(fitScale, Math.min(previousCamera.scale, Math.max(MAX_CAMERA_SCALE, fitScale * 8)));
+
+    state.camera = {
+      x: state.view.width * 0.5 - center.x * scale,
+      y: state.view.height * 0.5 - center.y * scale,
+      scale,
+      minScale: fitScale,
+      maxScale: Math.max(MAX_CAMERA_SCALE, fitScale * 8)
+    };
+
+    clampCamera();
+  }
+
+  function centerCamera() {
+    state.camera.x = (state.view.width - state.view.worldWidth * state.camera.scale) * 0.5;
+    state.camera.y = (state.view.height - state.view.worldHeight * state.camera.scale) * 0.5;
+  }
+
+  function clampCamera() {
+    if (!state.camera || !state.view) {
+      return;
+    }
+
+    const scaledWidth = state.view.worldWidth * state.camera.scale;
+    const scaledHeight = state.view.worldHeight * state.camera.scale;
+
+    if (scaledWidth <= state.view.width) {
+      state.camera.x = (state.view.width - scaledWidth) * 0.5;
+    } else {
+      state.camera.x = Math.min(0, Math.max(state.view.width - scaledWidth, state.camera.x));
+    }
+
+    if (scaledHeight <= state.view.height) {
+      state.camera.y = (state.view.height - scaledHeight) * 0.5;
+    } else {
+      state.camera.y = Math.min(0, Math.max(state.view.height - scaledHeight, state.camera.y));
+    }
+  }
+
+  function panCamera(deltaX, deltaY) {
+    state.camera.x += deltaX;
+    state.camera.y += deltaY;
+    clampCamera();
+  }
+
+  function setCameraScaleAtPoint(scale, viewportPoint, worldPoint) {
+    const nextScale = Math.max(state.camera.minScale, Math.min(state.camera.maxScale, scale));
+    const focus = worldPoint || viewportToWorld(viewportPoint);
+
+    state.camera.scale = nextScale;
+    state.camera.x = viewportPoint.x - focus.x * nextScale;
+    state.camera.y = viewportPoint.y - focus.y * nextScale;
+    clampCamera();
   }
 
   function render(timestamp) {
-    if (!state.level || !state.view) {
+    if (!state.level || !state.view || !state.camera) {
       return;
     }
 
     const now = timestamp || performance.now();
+    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, state.view.width, state.view.height);
+    ctx.save();
+    ctx.translate(state.camera.x, state.camera.y);
+    ctx.scale(state.camera.scale, state.camera.scale);
     drawBoardBase();
     drawGridPoints();
     drawDebugOverlay();
     drawArrows(now);
+    ctx.restore();
 
     if (state.moving) {
       requestAnimationFrame(render);
@@ -312,7 +438,7 @@
   function drawBoardBase() {
     ctx.save();
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, state.view.width, state.view.height);
+    ctx.fillRect(0, 0, state.view.worldWidth, state.view.worldHeight);
     ctx.restore();
   }
 
@@ -577,23 +703,217 @@
     ctx.restore();
   }
 
+  function getEventViewportPoint(event) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+  }
+
+  function viewportToWorld(point) {
+    return {
+      x: (point.x - state.camera.x) / state.camera.scale,
+      y: (point.y - state.camera.y) / state.camera.scale
+    };
+  }
+
   function handlePointerDown(event) {
+    if (!state.camera) {
+      return;
+    }
+
+    event.preventDefault();
+    canvas.setPointerCapture(event.pointerId);
+    activePointers.set(event.pointerId, getEventViewportPoint(event));
+
+    if (activePointers.size === 1) {
+      beginSinglePointerGesture(event.pointerId);
+    } else if (activePointers.size === 2) {
+      beginPinchGesture();
+    }
+  }
+
+  function handlePointerMove(event) {
+    if (!activePointers.has(event.pointerId) || !state.camera) {
+      return;
+    }
+
+    event.preventDefault();
+    activePointers.set(event.pointerId, getEventViewportPoint(event));
+
+    if (activePointers.size >= 2) {
+      if (!gesture || gesture.type !== "pinch") {
+        beginPinchGesture();
+      }
+
+      updatePinchGesture();
+      render();
+      return;
+    }
+
+    if (!gesture || gesture.type !== "single" || gesture.pointerId !== event.pointerId) {
+      beginSinglePointerGesture(event.pointerId);
+    }
+
+    updateSinglePointerGesture();
+  }
+
+  function handlePointerUp(event) {
+    if (!activePointers.has(event.pointerId)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const point = getEventViewportPoint(event);
+    const wasTap = gesture &&
+      gesture.type === "single" &&
+      gesture.pointerId === event.pointerId &&
+      !gesture.moved &&
+      activePointers.size === 1;
+
+    activePointers.delete(event.pointerId);
+    releasePointerCapture(event.pointerId);
+
+    if (wasTap) {
+      handleBoardTap(point);
+    }
+
+    restartGestureAfterPointerChange();
+  }
+
+  function handlePointerCancel(event) {
+    activePointers.delete(event.pointerId);
+    releasePointerCapture(event.pointerId);
+    restartGestureAfterPointerChange();
+  }
+
+  function releasePointerCapture(pointerId) {
+    if (canvas.hasPointerCapture(pointerId)) {
+      canvas.releasePointerCapture(pointerId);
+    }
+  }
+
+  function beginSinglePointerGesture(pointerId) {
+    const point = activePointers.get(pointerId);
+
+    gesture = {
+      type: "single",
+      pointerId,
+      start: { ...point },
+      last: { ...point },
+      moved: false
+    };
+  }
+
+  function beginPinchGesture() {
+    const points = getPinchPoints();
+
+    if (!points) {
+      return;
+    }
+
+    const center = getMidpoint(points[0], points[1]);
+
+    gesture = {
+      type: "pinch",
+      startDistance: Math.max(1, getDistance(points[0], points[1])),
+      startScale: state.camera.scale,
+      centerWorld: viewportToWorld(center),
+      moved: true
+    };
+  }
+
+  function updateSinglePointerGesture() {
+    const point = activePointers.get(gesture.pointerId);
+    const totalDistance = getDistance(gesture.start, point);
+
+    if (!gesture.moved && totalDistance < TAP_MOVE_THRESHOLD) {
+      return;
+    }
+
+    gesture.moved = true;
+    panCamera(point.x - gesture.last.x, point.y - gesture.last.y);
+    gesture.last = { ...point };
+    render();
+  }
+
+  function updatePinchGesture() {
+    const points = getPinchPoints();
+
+    if (!points || !gesture || gesture.type !== "pinch") {
+      return;
+    }
+
+    const center = getMidpoint(points[0], points[1]);
+    const distance = Math.max(1, getDistance(points[0], points[1]));
+    const scale = gesture.startScale * (distance / gesture.startDistance);
+
+    setCameraScaleAtPoint(scale, center, gesture.centerWorld);
+  }
+
+  function restartGestureAfterPointerChange() {
+    if (activePointers.size === 0) {
+      gesture = null;
+      return;
+    }
+
+    if (activePointers.size === 1) {
+      beginSinglePointerGesture(activePointers.keys().next().value);
+      return;
+    }
+
+    beginPinchGesture();
+  }
+
+  function getPinchPoints() {
+    const points = [...activePointers.values()];
+
+    if (points.length < 2) {
+      return null;
+    }
+
+    return points.slice(0, 2);
+  }
+
+  function getMidpoint(a, b) {
+    return {
+      x: (a.x + b.x) * 0.5,
+      y: (a.y + b.y) * 0.5
+    };
+  }
+
+  function getDistance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  function handleWheel(event) {
+    if (!state.camera) {
+      return;
+    }
+
+    event.preventDefault();
+    const point = getEventViewportPoint(event);
+    const scale = state.camera.scale * Math.exp(-event.deltaY * WHEEL_ZOOM_SPEED);
+
+    setCameraScaleAtPoint(scale, point);
+    render();
+  }
+
+  function handleBoardTap(point) {
     if (state.moving || state.complete) {
       return;
     }
 
-    const arrow = arrowFromPointer(event);
+    const arrow = arrowFromViewportPoint(point);
     if (arrow) {
       startMovingArrow(arrow);
     }
   }
 
-  function arrowFromPointer(event) {
-    const rect = canvas.getBoundingClientRect();
-    const pointer = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    };
+  function arrowFromViewportPoint(point) {
+    const pointer = viewportToWorld(point);
     let closest = null;
     let closestDistance = Infinity;
 
@@ -611,7 +931,7 @@
   }
 
   function getTouchRadius() {
-    return Math.max(MIN_TOUCH_RADIUS, state.view.lineWidth * TOUCH_RADIUS_MULTIPLIER);
+    return Math.max(MIN_TOUCH_RADIUS / state.camera.scale, state.view.lineWidth * TOUCH_RADIUS_MULTIPLIER);
   }
 
   function distanceToPath(pointer, path) {
@@ -781,11 +1101,30 @@
 
     if (state.arrows.length === 0) {
       state.complete = true;
-      clearPanel.hidden = false;
-      updateClearPanel();
+      if (outgameMode) {
+        emitOutgameClear();
+      } else {
+        clearPanel.hidden = false;
+        updateClearPanel();
+      }
     }
 
     render();
+  }
+
+  function emitOutgameClear() {
+    if (typeof outgameCallbacks.onClear !== "function") {
+      return;
+    }
+
+    outgameCallbacks.onClear({
+      levelId: state.level.id,
+      levelNumber: state.levelIndex + 1,
+      totalLevels: MAX_LEVELS,
+      remaining: state.arrows.length,
+      difficulty: state.level.difficulty || null,
+      seed: state.level.seed || null
+    });
   }
 
   function updateClearPanel() {
@@ -968,7 +1307,65 @@
     panel.querySelector('[data-dev-stage-step="1"]').disabled = levelNumber >= MAX_LEVELS;
   }
 
+  window.arrowPuzzle = {
+    reset: resetLevel,
+    nextLevel: loadNextLevel,
+    loadLevel: loadLevelNumber,
+    loadLevelIndex: loadLevel,
+    setCallbacks(callbacks) {
+      outgameCallbacks = callbacks && typeof callbacks === "object" ? callbacks : {};
+      return true;
+    },
+    setOutgameMode(enabled) {
+      outgameMode = Boolean(enabled);
+      if (outgameMode) {
+        clearPanel.hidden = true;
+      } else if (state.complete) {
+        clearPanel.hidden = false;
+        updateClearPanel();
+      }
+      return outgameMode;
+    },
+    solveLevel: window.ArrowPuzzleSolver.solveLevel,
+    getState() {
+      return {
+        levelId: state.level?.id ?? null,
+        levelNumber: state.levelIndex + 1,
+        totalLevels: MAX_LEVELS,
+        isLastLevel: isLastLevel(),
+        savedLevelCount: LEVELS.length,
+        seed: state.level?.seed ?? null,
+        remaining: state.arrows.length,
+        complete: state.complete,
+        moving: state.moving ? state.moving.id : null,
+        view: state.view
+          ? {
+              width: state.view.width,
+              height: state.view.height,
+              worldWidth: state.view.worldWidth,
+              worldHeight: state.view.worldHeight,
+              boardX: state.view.boardX,
+              boardY: state.view.boardY,
+              step: state.view.step
+            }
+          : null,
+        camera: state.camera ? { ...state.camera } : null,
+        debug: state.level?.debug ? { ...state.level.debug } : null,
+        solutionOrder: state.level?.solutionOrder ? [...state.level.solutionOrder] : null,
+        stats: state.level?.stats ? { ...state.level.stats } : null,
+        arrows: state.arrows.map((arrow) => ({
+          id: arrow.id,
+          path: arrow.path.map((point) => [...point])
+        }))
+      };
+    }
+  };
+
   canvas.addEventListener("pointerdown", handlePointerDown);
+  canvas.addEventListener("pointermove", handlePointerMove);
+  canvas.addEventListener("pointerup", handlePointerUp);
+  canvas.addEventListener("pointercancel", handlePointerCancel);
+  canvas.addEventListener("wheel", handleWheel, { passive: false });
   restartButton.addEventListener("click", resetLevel);
   clearActionButton.addEventListener("click", loadNextLevel);
   window.addEventListener("resize", handleResize);
@@ -983,6 +1380,21 @@
     reset: resetLevel,
     nextLevel: loadNextLevel,
     loadLevel: loadLevelNumber,
+    loadLevelIndex: loadLevel,
+    setCallbacks(callbacks) {
+      outgameCallbacks = callbacks && typeof callbacks === "object" ? callbacks : {};
+      return true;
+    },
+    setOutgameMode(enabled) {
+      outgameMode = Boolean(enabled);
+      if (outgameMode) {
+        clearPanel.hidden = true;
+      } else if (state.complete) {
+        clearPanel.hidden = false;
+        updateClearPanel();
+      }
+      return outgameMode;
+    },
     solveLevel: window.ArrowPuzzleSolver.solveLevel,
     getState() {
       return {
@@ -995,6 +1407,18 @@
         remaining: state.arrows.length,
         complete: state.complete,
         moving: state.moving ? state.moving.id : null,
+        view: state.view
+          ? {
+              width: state.view.width,
+              height: state.view.height,
+              worldWidth: state.view.worldWidth,
+              worldHeight: state.view.worldHeight,
+              boardX: state.view.boardX,
+              boardY: state.view.boardY,
+              step: state.view.step
+            }
+          : null,
+        camera: state.camera ? { ...state.camera } : null,
         debug: state.level.debug ? { ...state.level.debug } : null,
         solutionOrder: state.level.solutionOrder ? [...state.level.solutionOrder] : null,
         stats: state.level.stats ? { ...state.level.stats } : null,

@@ -1,0 +1,2875 @@
+{
+  "contractVersion": 1,
+  "sceneId": "lobby-map",
+  "sceneName": "lobby-map",
+  "canvas": {
+    "width": 390,
+    "height": 844
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "background": {
+    "type": "image-stretch",
+    "color": "#318add",
+    "color2": "#0e4a8c",
+    "gradientAngle": 180,
+    "imagePath": "assets/hidden_image.webp",
+    "tileSize": 64,
+    "stretchMode": "cover",
+    "scrollEnabled": false,
+    "scrollDirection": "right",
+    "scrollDuration": 4
+  },
+  "groups": [],
+  "sceneAnimations": [],
+  "layers": [
+    {
+      "stableId": "start_gamestg",
+      "layerType": "component",
+      "displayName": "current_stage_panel",
+      "x": 135,
+      "y": 633,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 18,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 120,
+            "height": 70,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#3d6fa8",
+            "color2": "#264a78",
+            "angle": 180,
+            "depthIntensity": 51,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#5a9ad5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "pulse",
+            "className": "animate__pulse"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "pulse",
+            "group": "Cute / Attention",
+            "phase": "attention",
+            "className": "animate__pulse",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "internal",
+            "name": "ambient-sparkle-aura",
+            "template": "ambient-aura"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "ambient-sparkle-aura",
+            "group": "Sparkle / Halo",
+            "count": 50,
+            "speedMin": 0,
+            "speedMax": 0,
+            "sizeMin": 0.45,
+            "sizeMax": 0.9,
+            "spread": 360,
+            "auraWidth": 250,
+            "auraHeight": 180,
+            "loop": true
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "",
+          "bindingKey": "level_display",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 12,
+          "zIndex": 1,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        },
+        {
+          "slotIndex": 1,
+          "staticContent": "Level",
+          "bindingKey": "Level",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": -16,
+          "zIndex": 1,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "start_game"
+        }
+      ]
+    },
+    {
+      "stableId": "heart-1",
+      "layerType": "image",
+      "displayName": "heart",
+      "x": 136,
+      "y": 47,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 62,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "exportPath": "assets/heart.webp",
+        "width": 34,
+        "height": 34,
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "5",
+          "bindingKey": "heart_count",
+          "fontSize": 14,
+          "fontWeight": "700",
+          "fontFamily": "inherit",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "zIndex": 10,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 1,
+              "y": 1,
+              "blur": 3,
+              "color": "#000000",
+              "opacity": 80
+            }
+          }
+        }
+      ],
+      "image": {
+        "exportPath": "assets/heart.webp",
+        "imageKey": "",
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "ingame-top-panel-2",
+      "layerType": "component",
+      "displayName": "heart_timer",
+      "x": 154,
+      "y": 50,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 60,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 30,
+            "radius": 5,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#3d6fa8",
+            "color2": "#264a78",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#5a9ad5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 2,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "05:00",
+          "bindingKey": "heart_timer",
+          "fontSize": 14,
+          "fontWeight": "bold",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 50
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "level-path-1",
+      "layerType": "component",
+      "displayName": "Level Path",
+      "x": 191,
+      "y": -43,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 10,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 8,
+            "height": 700,
+            "radius": 4,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#ffd700",
+            "color2": "#d4960a",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 20
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "next1-stage-panel",
+      "layerType": "component",
+      "displayName": "next1_stage_panel",
+      "x": 155,
+      "y": 465,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 50,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 70,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#3d6fa8",
+            "color2": "#264a78",
+            "angle": 180,
+            "depthIntensity": 51,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#5a9ad5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "New",
+          "bindingKey": "next1_stg",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "nav-item-locked-5",
+      "layerType": "component",
+      "displayName": "stage_lock_panel",
+      "x": 157,
+      "y": 467,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 60,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 70,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "solid",
+            "color1": "rgba(0,0,0,0.3)",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "🔒",
+          "bindingKey": "",
+          "fontSize": 28,
+          "fontWeight": "normal",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#f5c842",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 3,
+              "color": "#000000",
+              "opacity": 50
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "coin-35",
+      "layerType": "image",
+      "displayName": "coin",
+      "x": 267,
+      "y": 48,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 67,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "exportPath": "assets/coin.webp",
+        "width": 35,
+        "height": 35,
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [],
+      "image": {
+        "exportPath": "assets/coin.webp",
+        "imageKey": "",
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "coin-counter-36",
+      "layerType": "component",
+      "displayName": "Coin Counter",
+      "x": 273,
+      "y": 50,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 60,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 100,
+            "height": 30,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#4a90d9",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 2,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 3,
+              "blur": 6,
+              "color": "#000000",
+              "opacity": 25
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "560",
+          "bindingKey": "player.coin",
+          "fontSize": 16,
+          "fontWeight": "900",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 10,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 1,
+              "color": "#1e4a80"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 50
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "next3-stage-panel",
+      "layerType": "component",
+      "displayName": "next3_stage_panel",
+      "x": 155,
+      "y": 126,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 50,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 70,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#3d6fa8",
+            "color2": "#264a78",
+            "angle": 180,
+            "depthIntensity": 51,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#5a9ad5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "New",
+          "bindingKey": "next3_stg",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "stage-lock-panel-4",
+      "layerType": "component",
+      "displayName": "stage_lock_panel",
+      "x": 152,
+      "y": 126,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 60,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 70,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "solid",
+            "color1": "rgba(0,0,0,0.3)",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "🔒",
+          "bindingKey": "",
+          "fontSize": 28,
+          "fontWeight": "normal",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#f5c842",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 3,
+              "color": "#000000",
+              "opacity": 50
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "next2-stage-panel",
+      "layerType": "component",
+      "displayName": "next2_stage_panel",
+      "x": 155,
+      "y": 296,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 50,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 70,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#3d6fa8",
+            "color2": "#264a78",
+            "angle": 180,
+            "depthIntensity": 51,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#5a9ad5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "New",
+          "bindingKey": "next2_stg",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "stage-lock-panel-7",
+      "layerType": "component",
+      "displayName": "stage_lock_panel",
+      "x": 156,
+      "y": 298,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 60,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 70,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "solid",
+            "color1": "rgba(0,0,0,0.3)",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "🔒",
+          "bindingKey": "",
+          "fontSize": 28,
+          "fontWeight": "normal",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#f5c842",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 3,
+              "color": "#000000",
+              "opacity": 50
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "buy-heart-43",
+      "layerType": "component",
+      "displayName": "buy_heart",
+      "x": 157,
+      "y": 72,
+      "scale": 0.4,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 85,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "circle",
+            "width": 42,
+            "height": 42,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#4cde6e",
+            "color2": "#1a9e3a",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#a8f5be"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 3,
+              "color": "#0e6b27"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 3,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 3,
+              "color": "#ffffff",
+              "opacity": 25
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "+",
+          "bindingKey": "buy_heart",
+          "fontSize": 30,
+          "fontWeight": "bold",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0.5,
+              "color": "#0e6b27"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 40
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "buy_heart"
+        }
+      ]
+    },
+    {
+      "stableId": "buy-coin-44",
+      "layerType": "component",
+      "displayName": "buy_coin",
+      "x": 287,
+      "y": 72,
+      "scale": 0.4,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 86,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "circle",
+            "width": 42,
+            "height": 42,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#4cde6e",
+            "color2": "#1a9e3a",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#a8f5be"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 3,
+              "color": "#0e6b27"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 3,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 3,
+              "color": "#ffffff",
+              "opacity": 25
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 850,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "+",
+          "bindingKey": "buy_coin",
+          "fontSize": 30,
+          "fontWeight": "bold",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0.5,
+              "color": "#0e6b27"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 40
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "buy_coin"
+        }
+      ]
+    },
+    {
+      "stableId": "avatar-cell-471",
+      "layerType": "component",
+      "displayName": "Avatar Cell",
+      "x": 37,
+      "y": 38,
+      "scale": 0.6,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 15,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 88,
+            "height": 88,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#2a4a6e",
+            "color2": "#1a2e4a",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#3d6a9e"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 6,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": [
+          {
+            "exportPath": "assets/ctry/US.webp",
+            "imageKey": "player.flags",
+            "width": 80,
+            "height": 80,
+            "offsetX": 0,
+            "offsetY": 0,
+            "zIndex": 2,
+            "style": {
+              "shadow": {
+                "enabled": false,
+                "x": 0,
+                "y": 4,
+                "blur": 8,
+                "color": "#000000",
+                "opacity": 50
+              }
+            }
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": false,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [],
+      "image": null,
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "goto_profile"
+        }
+      ]
+    },
+    {
+      "stableId": "no-ads-webp-982",
+      "layerType": "image",
+      "displayName": "no_ads.webp",
+      "x": 288,
+      "y": 151,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 16,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "exportPath": "assets/items/no_ads.webp",
+        "width": 64,
+        "height": 64,
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "pulse",
+            "className": "animate__pulse"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 7000
+          },
+          "params": {
+            "presetId": "pulse",
+            "group": "Cute / Attention",
+            "phase": "attention",
+            "className": "animate__pulse",
+            "baseClass": "animate__animated",
+            "loop": true
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [],
+      "image": {
+        "exportPath": "assets/items/no_ads.webp",
+        "imageKey": "",
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "rotation": 0,
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "popup_noads"
+        }
+      ]
+    }
+  ]
+}

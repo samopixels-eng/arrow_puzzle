@@ -1,0 +1,212 @@
+{
+  "contractVersion": 1,
+  "sceneId": "logo",
+  "sceneName": "logo",
+  "canvas": {
+    "width": 390,
+    "height": 844
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "background": {
+    "type": "solid",
+    "color": "#42a5f5",
+    "color2": "#0e4a8c",
+    "gradientAngle": 180,
+    "imagePath": "assets/bg_start.webp",
+    "tileSize": 64,
+    "stretchMode": "cover",
+    "scrollEnabled": false,
+    "scrollDirection": "right",
+    "scrollDuration": 4
+  },
+  "groups": [],
+  "sceneAnimations": [
+    {
+      "id": "anim-mp08ae23v80v",
+      "enabled": true,
+      "name": "Fade from Black",
+      "presetId": "fade-from-black",
+      "type": "screen-transition",
+      "targetStableId": "",
+      "startMode": "afterPrevious",
+      "startTimeMs": 0,
+      "delayMs": 0,
+      "durationMs": 500,
+      "easing": "ease",
+      "color": "#000000",
+      "fromOpacity": 1,
+      "toOpacity": 0,
+      "cssPresetId": ""
+    },
+    {
+      "id": "anim-mp08b1ay9rnq",
+      "enabled": true,
+      "name": "Bounce In",
+      "presetId": "bounce-in",
+      "type": "object-animation",
+      "targetStableId": "logo-webp-1",
+      "startMode": "afterPrevious",
+      "startTimeMs": 0,
+      "delayMs": 0,
+      "durationMs": 850,
+      "easing": "ease",
+      "color": "#000000",
+      "fromOpacity": 0,
+      "toOpacity": 1,
+      "cssPresetId": "bounce-in"
+    },
+    {
+      "id": "anim-mp095koqsr4e",
+      "enabled": true,
+      "name": "Wait / Hold",
+      "presetId": "hold",
+      "type": "wait",
+      "targetStableId": "",
+      "startMode": "afterPrevious",
+      "startTimeMs": 0,
+      "delayMs": 0,
+      "durationMs": 1000,
+      "easing": "ease",
+      "color": "#000000",
+      "fromOpacity": 0,
+      "toOpacity": 1,
+      "cssPresetId": ""
+    },
+    {
+      "id": "anim-mp08bdte7wgm",
+      "enabled": true,
+      "name": "Fade to Black",
+      "presetId": "fade-to-black",
+      "type": "screen-transition",
+      "targetStableId": "",
+      "startMode": "afterPrevious",
+      "startTimeMs": 0,
+      "delayMs": 0,
+      "durationMs": 500,
+      "easing": "ease",
+      "color": "#000000",
+      "fromOpacity": 0,
+      "toOpacity": 1,
+      "cssPresetId": ""
+    }
+  ],
+  "layers": [
+    {
+      "stableId": "logo-webp-1",
+      "layerType": "image",
+      "displayName": "logo.webp",
+      "x": 68,
+      "y": 295,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 1,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "exportPath": "assets/logo.webp",
+        "width": 254,
+        "height": 254,
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": false
+          }
+        },
+        {
+          "type": "css-animation",
+          "source": {
+            "provider": "animate.css",
+            "name": "bounce-in",
+            "className": "animate__bounceIn"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "timing": {
+            "durationMs": 800,
+            "delayMs": 0,
+            "iteration": 1,
+            "loopDelayMs": 600
+          },
+          "params": {
+            "presetId": "bounce-in",
+            "group": "Appear",
+            "phase": "enter",
+            "className": "animate__bounceIn",
+            "baseClass": "animate__animated",
+            "loop": false
+          }
+        },
+        {
+          "type": "particle-effect",
+          "source": {
+            "provider": "party.js",
+            "name": "sparkle-burst",
+            "template": "sparkles"
+          },
+          "enabled": false,
+          "target": "self",
+          "trigger": "mount",
+          "params": {
+            "presetId": "sparkle-burst",
+            "group": "Sparkle / Halo",
+            "count": 36,
+            "speedMin": 80,
+            "speedMax": 260,
+            "sizeMin": 0.7,
+            "sizeMax": 1.4,
+            "spread": 70,
+            "auraWidth": 140,
+            "auraHeight": 140,
+            "loop": false
+          }
+        }
+      ],
+      "texts": [],
+      "image": {
+        "exportPath": "assets/logo.webp",
+        "imageKey": "",
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "rotation": 0,
+      "events": []
+    }
+  ]
+}

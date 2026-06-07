@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#16213e">
+    <base href="src/">
+    <title>Arrow Puzzle Outgame</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka+One&family=Boogaloo&family=Righteous&family=Baloo+2:wght@800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <div class="app-shell" style="display:none">
+      <header class="top-bar" aria-label="Game status">
+        <div class="level-pill">
+          <span class="level-label">Level 1</span>
+          <div class="hearts" aria-label="5 hearts">
+            <span class="heart"></span>
+            <span class="heart"></span>
+            <span class="heart"></span>
+            <span class="heart"></span>
+            <span class="heart"></span>
+          </div>
+        </div>
+      </header>
+
+      <main class="game-card">
+        <section class="board-stage" aria-label="Arrow puzzle board">
+          <canvas id="game-canvas" width="420" height="420" aria-label="Level 1 puzzle"></canvas>
+        </section>
+
+        <footer class="game-footer">
+          <span id="remaining-label">12 left</span>
+          <button id="restart-button" type="button">Restart</button>
+        </footer>
+
+        <div id="clear-panel" class="clear-panel" hidden>
+          <p>LEVEL CLEAR</p>
+          <button id="clear-restart" type="button">Next Level</button>
+        </div>
+      </main>
+    </div>
+
+    <script src="puzzle-rules.js" defer></script>
+    <script src="puzzle-solver.js" defer></script>
+    <script src="levels.js" defer></script>
+    <script>
+      window.ARROW_PUZZLE_CONFIG = {
+        devMode: false,
+        outgameMode: true
+      };
+    </script>
+    <script src="main.js" defer></script>
+    <script>
+      window.addEventListener('load', () => {
+        import('./js/arrow-puzzle-main.js').catch((error) => {
+          document.body.dataset.arrowOutgameBoot = 'import-error';
+          console.error('[ARROW_PUZZLE_OUTGAME] import failed', error);
+          const container = document.getElementById('app');
+          if (container) {
+            container.innerHTML = `
+              <div style="color:#fff;background:#111827;min-height:100vh;padding:24px;font-family:sans-serif">
+                <h2>Outgame import failed</h2>
+                <pre style="white-space:pre-wrap">${String(error && error.message || error)}</pre>
+              </div>
+            `;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

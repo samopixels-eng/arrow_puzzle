@@ -2050,21 +2050,32 @@
       // flow shape variety: low straight-bias makes bodies wind; high long-chance
       // and point range make long snakes; turnBias prefers changing direction so
       // arrows bend 2+ times and fold into U-turns.
-      flowStraightBias: options.flowStraightBias != null ? options.flowStraightBias : 0.32,
-      flowTurnBias: options.flowTurnBias != null ? options.flowTurnBias : 0.7,
+      // Winding is toned DOWN: straighter bodies, fewer forced turns.
+      flowStraightBias: options.flowStraightBias != null ? options.flowStraightBias : 0.55,
+      flowTurnBias: options.flowTurnBias != null ? options.flowTurnBias : 0.4,
       // How often body growth hugs the carved frontier (low-degree). Higher keeps
-      // coverage tidy (fewer holes); lower makes shapes more random. Balanced so
-      // shapes vary without leaving too many empty cells.
+      // coverage tidy (fewer holes); lower makes shapes more random.
       flowTidyBias: options.flowTidyBias != null ? options.flowTidyBias : 0.5,
-      // Chance to pick a spatially RANDOM head instead of a far-weighted one, so
-      // carving scatters across the board and neighbours don't tile the same shape.
-      flowSpread: options.flowSpread != null ? options.flowSpread : 0.35,
-      flowLongChance: options.flowLongChance != null ? options.flowLongChance : 0.8,
+      // Chance to pick a spatially RANDOM head (anti-clustering). Kept small so the
+      // far-exit preference dominates.
+      flowSpread: options.flowSpread != null ? options.flowSpread : 0.1,
+      // Long-arrow targeting. flowLongScale grows the max length with board size
+      // (progressive expansion: bigger maps get longer, farther-crossing arrows).
+      flowLongChance: options.flowLongChance != null ? options.flowLongChance : 0.85,
       flowMinPoints: options.flowMinPoints || 5,
       flowMaxPoints: options.flowMaxPoints || 22,
+      flowLongScale: options.flowLongScale != null ? options.flowLongScale : 0.5,
       flowShortPoints: options.flowShortPoints || 3,
-      flowFarWeightExp: options.flowFarWeightExp != null ? options.flowFarWeightExp : 1,
-      flowDirBalance: options.flowDirBalance != null ? options.flowDirBalance : 1.5,
+      // Corridor "spines": reserved straight segments carved LAST as far-exit
+      // heroes. DISABLED by default (0): multi-seed tests showed it is a net
+      // negative — a reserved spine blocks every other arrow that would exit
+      // across it, which RAISES the near-exit ratio and leaves many holes. Kept
+      // behind this knob for experimentation only.
+      flowSpineDensity: options.flowSpineDensity != null ? options.flowSpineDensity : 0,
+      flowSpineLen: options.flowSpineLen != null ? options.flowSpineLen : 0.32,
+      // Far-exit weighting: distance^exp plus the +2/+1 farthest/2nd-farthest bonus.
+      flowFarWeightExp: options.flowFarWeightExp != null ? options.flowFarWeightExp : 1.5,
+      flowDirBalance: options.flowDirBalance != null ? options.flowDirBalance : 1.0,
       solverVisitedStateLimit: options.solverVisitedStateLimit || 80000,
       requireFirstExit: options.requireFirstExit === true,
       debugGeneratedLevel: Boolean(options.debugGeneratedLevel),
@@ -2361,6 +2372,90 @@
       return count;
     }
 
+    // ---- corridor (spine) reservation: deliberate far-exit heroes ----
+    // Reserved cells are taken out of phase-1 carving but still BLOCK phase-1
+    // rays (they are removed later). Each spine is a straight segment whose head
+    // points at a FAR edge; after phase 1 empties the space in front, the spine
+    // is carved as one long arrow that crosses far. Acyclicity is preserved
+    // because every arrow still only exits through already-cleared space.
+    const reserved = new Set();
+    const spines = [];
+
+    // True if the ray from `head` in `direction` hits a cell of `blockSet`
+    // before leaving the board.
+    function rayBlocked(head, direction, blockSet) {
+      const maxDistance = Math.max(level.pointColumns, level.pointRows) + 1;
+
+      for (let d = 1; d <= maxDistance; d += 1) {
+        const cell = [head[0] + direction.dx * d, head[1] + direction.dy * d];
+
+        if (!rules.isInBounds(level, cell)) {
+          return false;
+        }
+
+        if (blockSet.has(pointKey(cell))) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function buildSpineCells(direction, bodyLen) {
+      const W = level.pointColumns;
+      const H = level.pointRows;
+      let head;
+
+      if (direction.dx !== 0) {
+        const y = randomInt(random, 0, H - 1);
+        head = direction.dx > 0
+          ? [randomInt(random, bodyLen - 1, Math.max(bodyLen - 1, Math.floor((W - 1) * 0.5))), y]
+          : [randomInt(random, Math.min(W - bodyLen, Math.ceil((W - 1) * 0.5)), W - bodyLen), y];
+      } else {
+        const x = randomInt(random, 0, W - 1);
+        head = direction.dy > 0
+          ? [x, randomInt(random, bodyLen - 1, Math.max(bodyLen - 1, Math.floor((H - 1) * 0.5)))]
+          : [x, randomInt(random, Math.min(H - bodyLen, Math.ceil((H - 1) * 0.5)), H - bodyLen)];
+      }
+
+      const cells = [];
+
+      for (let i = bodyLen - 1; i >= 0; i -= 1) {
+        cells.push([head[0] - direction.dx * i, head[1] - direction.dy * i]);
+      }
+
+      return cells.some((c) => !rules.isInBounds(level, c)) ? null : cells;
+    }
+
+    function reserveSpines() {
+      if (config.flowSpineDensity <= 0) {
+        return;
+      }
+
+      const dim = Math.max(level.pointColumns, level.pointRows);
+      const target = Math.round(Math.min(level.pointColumns, level.pointRows) * config.flowSpineDensity);
+      const maxBody = Math.max(3, Math.round(dim * config.flowSpineLen));
+      let attempts = 0;
+
+      while (spines.length < target && attempts < target * 12 + 20) {
+        attempts += 1;
+        const direction = directions[Math.floor(random() * directions.length)];
+        const bodyLen = randomInt(random, Math.max(3, Math.floor(maxBody / 2)), maxBody);
+        const cells = buildSpineCells(direction, bodyLen);
+
+        if (!cells || !cells.every((c) => isRemaining(c))) {
+          continue;
+        }
+
+        for (const c of cells) {
+          removeCell(c);
+          reserved.add(pointKey(c));
+        }
+
+        spines.push({ cells, head: cells[cells.length - 1], direction });
+      }
+    }
+
     // Heads with a clear ray = the extreme remaining cell of each row/column.
     // We also require the cell behind the head to be remaining so the arrow has
     // a body whose last step points that way.
@@ -2377,9 +2472,25 @@
       function consider(head, direction, score) {
         const pen = [head[0] - direction.dx, head[1] - direction.dy];
 
-        if (isRemaining(pen)) {
-          candidates.push({ head, direction, score });
+        if (!isRemaining(pen)) {
+          return;
         }
+
+        // A reserved spine in front of the head blocks this exit (the spine is
+        // removed later), so this head has no clear ray — skip it.
+        if (reserved.size > 0 && rayBlocked(head, direction, reserved)) {
+          return;
+        }
+
+        // Rank the 4 outer edges by distance from the head; reward pointing at
+        // the farthest (+2) / second-farthest (+1) edge so heads avoid the near
+        // edge (the quadrant-drainage failure mode).
+        const dists = [head[1], maxY - head[1], head[0], maxX - head[0]];
+        const sorted = [...dists].sort((a, b) => b - a);
+        const rank = sorted.indexOf(score);
+        const farBonus = rank === 0 ? 2 : rank === 1 ? 1 : 0;
+
+        candidates.push({ head, direction, score, farBonus });
       }
 
       for (const [y, xs] of rowXs) {
@@ -2424,7 +2535,11 @@
     // points into a small area.
     function chooseTargetPoints() {
       if (random() < config.flowLongChance) {
-        return randomInt(random, config.flowMinPoints, config.flowMaxPoints);
+        // Progressive expansion: the long cap grows with board size, so bigger
+        // maps get longer arrows that can cross farther.
+        const sizeCap = Math.round(Math.max(level.pointColumns, level.pointRows) * config.flowLongScale);
+        const maxPoints = Math.max(config.flowMaxPoints, sizeCap);
+        return randomInt(random, config.flowMinPoints, maxPoints);
       }
 
       return randomInt(random, 2, config.flowShortPoints);
@@ -2547,6 +2662,8 @@
       return false;
     }
 
+    reserveSpines();
+
     while (remaining.size > 0) {
       const candidates = collectHeadCandidates();
 
@@ -2572,7 +2689,7 @@
       for (const candidate of candidates) {
         const far = Math.pow(candidate.score + 1, config.flowFarWeightExp);
         const balance = 1 / (1 + config.flowDirBalance * dirRecent[candidate.direction.name]);
-        candidate.weight = far * balance;
+        candidate.weight = far * (1 + candidate.farBonus) * balance;
         totalWeight += candidate.weight;
       }
 
@@ -2602,6 +2719,43 @@
       dirRecent[choice.direction.name] += 1;
 
       carve(growArrow(choice.head, choice.direction));
+    }
+
+    // Phase 2: carve the reserved spines (far-exit heroes) as soon as their head
+    // ray is clear of everything still present (leftover cells + other spines).
+    // Spines that never clear (mutual block) are dropped → their cells stay empty.
+    let progress = true;
+
+    while (progress && spines.length > 0) {
+      progress = false;
+
+      for (let i = spines.length - 1; i >= 0; i -= 1) {
+        const spine = spines[i];
+
+        if (rayBlocked(spine.head, spine.direction, remaining) ||
+            rayBlocked(spine.head, spine.direction, reserved)) {
+          continue;
+        }
+
+        for (const c of spine.cells) {
+          reserved.delete(pointKey(c));
+        }
+
+        arrows.push({
+          id: `a${arrows.length + 1}`,
+          color: config.color,
+          path: simplifyGridPath(spine.cells)
+        });
+        spines.splice(i, 1);
+        progress = true;
+      }
+    }
+
+    for (const spine of spines) {
+      for (const c of spine.cells) {
+        reserved.delete(pointKey(c));
+        uncovered.push(pointKey(c));
+      }
     }
 
     return { arrows, uncovered };

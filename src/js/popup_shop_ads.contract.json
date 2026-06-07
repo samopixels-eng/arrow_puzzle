@@ -1,0 +1,1722 @@
+{
+  "contractVersion": 1,
+  "sceneId": "popup-shop-ads",
+  "sceneName": "popup_shop_ads",
+  "canvas": {
+    "width": 390,
+    "height": 844
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "background": {
+    "type": "none",
+    "color": "#16213e",
+    "color2": "#0e4a8c",
+    "gradientAngle": 180,
+    "imagePath": "",
+    "tileSize": 64,
+    "stretchMode": "cover",
+    "scrollEnabled": false,
+    "scrollDirection": "right",
+    "scrollDuration": 4
+  },
+  "groups": [
+    {
+      "name": "Golden offer",
+      "layerStableIds": []
+    }
+  ],
+  "sceneAnimations": [],
+  "layers": [
+    {
+      "stableId": "coinshop-frame-1041",
+      "layerType": "component",
+      "displayName": "coinshop_frame",
+      "x": 29,
+      "y": 208,
+      "scale": 0.9,
+      "zIndex": 22,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 360,
+            "height": 50,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#3a7bd5",
+            "color2": "#1e4ca0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#82b1ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 5,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Enjoy ad-free fun!",
+          "bindingKey": "",
+          "fontSize": 30,
+          "fontWeight": "900",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 8,
+              "color": "#0531e1"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 4,
+              "y": 4,
+              "blur": 7,
+              "color": "#000000",
+              "opacity": 55
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "modal-frame-1042",
+      "layerType": "component",
+      "displayName": "Modal Frame",
+      "x": 13,
+      "y": 224,
+      "zIndex": 1,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 360,
+            "height": 406,
+            "radius": 24,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#3a7bd5",
+            "color2": "#1e4ca0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#7ab3f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 6,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 8,
+              "blur": 20,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 4,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      }
+    },
+    {
+      "stableId": "close-btn-1043",
+      "layerType": "component",
+      "displayName": "Close Button",
+      "x": 342,
+      "y": 212,
+      "zIndex": 36,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "circle",
+            "width": 36,
+            "height": 36,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#ff4d4d",
+            "color2": "#c90000",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#ff8080"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 3,
+              "color": "#800000"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 3,
+              "blur": 6,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "✕",
+          "bindingKey": "",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 40
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "close_shop_popup"
+        }
+      ]
+    },
+    {
+      "stableId": "coinshop-frame-1022",
+      "layerType": "component",
+      "displayName": "coinshop_frame",
+      "x": 23,
+      "y": 266,
+      "scale": 0.95,
+      "zIndex": 4,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 360,
+            "height": 175,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#3a7bd5",
+            "color2": "#1e4ca0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#82b1ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 5,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      }
+    },
+    {
+      "stableId": "noads-1023",
+      "layerType": "component",
+      "displayName": "noads",
+      "x": 243,
+      "y": 381,
+      "scale": 0.95,
+      "zIndex": 5,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 120,
+            "height": 45,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#8cc63f",
+            "color2": "#d4e157",
+            "angle": 180,
+            "depthIntensity": 37,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#212121"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 2,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 1,
+              "y": 1,
+              "blur": 7,
+              "color": "#ffffff",
+              "opacity": 100
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "1",
+          "bindingKey": "noads",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "buy_noads"
+        }
+      ]
+    },
+    {
+      "stableId": "coinshop-frame2-1024",
+      "layerType": "component",
+      "displayName": "coinshop_frame2",
+      "x": 125,
+      "y": 279,
+      "scale": 0.95,
+      "zIndex": 6,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 243,
+            "height": 100,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#e0e0e0",
+            "color2": "#bdbdbd",
+            "angle": 180,
+            "depthIntensity": 20,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#e0e0e0"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 8,
+              "y": 8,
+              "blur": 20,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 4,
+              "y": 4,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Removes Interstitial Ads",
+          "bindingKey": "",
+          "fontSize": 26,
+          "fontWeight": "normal",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": -10,
+          "style": {
+            "stroke": {
+              "width": 3.5,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 0,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        },
+        {
+          "slotIndex": 1,
+          "staticContent": "Rewarded ads will remain available.",
+          "bindingKey": "",
+          "fontSize": 18,
+          "fontWeight": "normal",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 23,
+          "zIndex": 2,
+          "style": {
+            "stroke": {
+              "width": 3,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 0,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "noadsbundle-title-1025",
+      "layerType": "component",
+      "displayName": "noadsbundle_title",
+      "x": 32,
+      "y": 382,
+      "scale": 0.95,
+      "zIndex": 7,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 200,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "No Ads",
+          "bindingKey": "",
+          "fontSize": 25,
+          "fontWeight": "900",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 8,
+              "color": "#0531e1"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 4,
+              "y": 4,
+              "blur": 7,
+              "color": "#000000",
+              "opacity": 55
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "no-ads-1026",
+      "layerType": "image",
+      "displayName": "no_ads",
+      "x": 28,
+      "y": 283,
+      "scale": 0.95,
+      "zIndex": 8,
+      "visual": {
+        "exportPath": "assets/items/no_ads.webp",
+        "width": 100,
+        "height": 96
+      }
+    },
+    {
+      "stableId": "coinshop-frame-1027",
+      "layerType": "component",
+      "displayName": "coinshop_frame",
+      "x": 23,
+      "y": 450,
+      "scale": 0.95,
+      "zIndex": 9,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 360,
+            "height": 174,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#3a7bd5",
+            "color2": "#1e4ca0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#82b1ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 4,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 5,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      }
+    },
+    {
+      "stableId": "noadsbundle1-1028",
+      "layerType": "component",
+      "displayName": "noadsbundle1",
+      "x": 243,
+      "y": 565,
+      "scale": 0.95,
+      "zIndex": 10,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 120,
+            "height": 45,
+            "radius": 16,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#8cc63f",
+            "color2": "#d4e157",
+            "angle": 180,
+            "depthIntensity": 37,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#212121"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 2,
+              "color": "#1a3558"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 5,
+              "blur": 14,
+              "color": "#000000",
+              "opacity": 35
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 1,
+              "y": 1,
+              "blur": 7,
+              "color": "#ffffff",
+              "opacity": 100
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "press",
+          "source": {
+            "provider": "internal",
+            "name": "press"
+          },
+          "enabled": true,
+          "target": "self",
+          "trigger": "pointer",
+          "params": {
+            "transitionMs": 100,
+            "brightness": 95,
+            "scale": 100,
+            "useDepthOffset": true
+          }
+        }
+      ],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "1",
+          "bindingKey": "noad_bundle",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "trigger": "click",
+          "eventName": "buy_noadsbundle1"
+        }
+      ]
+    },
+    {
+      "stableId": "coinshop-frame2-1029",
+      "layerType": "component",
+      "displayName": "coinshop_frame2",
+      "x": 128,
+      "y": 463,
+      "scale": 0.95,
+      "zIndex": 11,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 85,
+            "height": 100,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#e0e0e0",
+            "color2": "#bdbdbd",
+            "angle": 180,
+            "depthIntensity": 20,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#e0e0e0"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 8,
+              "y": 8,
+              "blur": 20,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 4,
+              "y": 4,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": [
+          {
+            "exportPath": "assets/shop/coin1.webp",
+            "width": 50,
+            "height": 50,
+            "offsetX": 0,
+            "offsetY": -10
+          }
+        ]
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "1000",
+          "bindingKey": "",
+          "fontSize": 25,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 30,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "coinshop-frame2-1030",
+      "layerType": "component",
+      "displayName": "coinshop_frame2",
+      "x": 217,
+      "y": 463,
+      "scale": 0.95,
+      "zIndex": 12,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 150,
+            "height": 100,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#e0e0e0",
+            "color2": "#bdbdbd",
+            "angle": 180,
+            "depthIntensity": 20,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 3,
+            "color": "#e0e0e0"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#0e2860"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 8,
+              "y": 8,
+              "blur": 20,
+              "color": "#000000",
+              "opacity": 50
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 4,
+              "y": 4,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 10
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      }
+    },
+    {
+      "stableId": "noadsbundle-title-1031",
+      "layerType": "component",
+      "displayName": "noadsbundle_title",
+      "x": 32,
+      "y": 566,
+      "scale": 0.95,
+      "zIndex": 13,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 200,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "No Ads Bundle",
+          "bindingKey": "",
+          "fontSize": 25,
+          "fontWeight": "900",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 8,
+              "color": "#0531e1"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 4,
+              "y": 4,
+              "blur": 7,
+              "color": "#000000",
+              "opacity": 55
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "noadsbundle-title-1032",
+      "layerType": "component",
+      "displayName": "noadsbundle_title",
+      "x": 223,
+      "y": 507,
+      "scale": 0.95,
+      "zIndex": 14,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 30,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "X2",
+          "bindingKey": "",
+          "fontSize": 23,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "noadsbundle-title-1033",
+      "layerType": "component",
+      "displayName": "noadsbundle_title",
+      "x": 292,
+      "y": 507,
+      "scale": 0.95,
+      "zIndex": 15,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 30,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "X2",
+          "bindingKey": "",
+          "fontSize": 23,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "noadsbundle-title-1034",
+      "layerType": "component",
+      "displayName": "noadsbundle_title",
+      "x": 257,
+      "y": 507,
+      "scale": 0.95,
+      "zIndex": 16,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 30,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "X2",
+          "bindingKey": "",
+          "fontSize": 23,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "noadsbundle-title-1035",
+      "layerType": "component",
+      "displayName": "noadsbundle_title",
+      "x": 326,
+      "y": 507,
+      "scale": 0.95,
+      "zIndex": 17,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 30,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "X2",
+          "bindingKey": "",
+          "fontSize": 23,
+          "fontWeight": "bold",
+          "fontFamily": "Boogaloo, cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 100
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stableId": "no-ads-1036",
+      "layerType": "image",
+      "displayName": "no_ads",
+      "x": 28,
+      "y": 467,
+      "scale": 0.95,
+      "zIndex": 18,
+      "visual": {
+        "exportPath": "assets/items/no_ads.webp",
+        "width": 100,
+        "height": 96
+      }
+    },
+    {
+      "stableId": "timer-1037",
+      "layerType": "image",
+      "displayName": "timer",
+      "x": 291,
+      "y": 478,
+      "scale": 0.95,
+      "zIndex": 19,
+      "visual": {
+        "exportPath": "assets/items/timer.webp",
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "stableId": "reset-board-1038",
+      "layerType": "image",
+      "displayName": "reset_board",
+      "x": 325,
+      "y": 478,
+      "scale": 0.95,
+      "zIndex": 20,
+      "visual": {
+        "exportPath": "assets/items/reset_board.webp",
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "stableId": "hammer-1039",
+      "layerType": "image",
+      "displayName": "hammer",
+      "x": 257,
+      "y": 478,
+      "scale": 0.95,
+      "zIndex": 21,
+      "visual": {
+        "exportPath": "assets/items/hammer.webp",
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "stableId": "hint-1040",
+      "layerType": "image",
+      "displayName": "hint",
+      "x": 223,
+      "y": 478,
+      "scale": 0.95,
+      "zIndex": 22,
+      "visual": {
+        "exportPath": "assets/items/hint.webp",
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "stableId": "comfyui-00333-webp-1046",
+      "layerType": "image",
+      "displayName": "ComfyUI_00333_.webp",
+      "x": 20,
+      "y": 445,
+      "zIndex": 24,
+      "visual": {
+        "exportPath": "assets/ComfyUI_00333_.webp",
+        "width": 38,
+        "height": 38
+      }
+    },
+    {
+      "stableId": "rays-burst-1047",
+      "layerType": "component",
+      "displayName": "Rays Burst",
+      "x": 7,
+      "y": 434,
+      "zIndex": 23,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "circle",
+            "width": 66,
+            "height": 66,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "conic-gradient",
+            "color1": "rgba(255,255,255,0.7)",
+            "color2": "rgba(215,215,215,0.48)",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 3,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": true,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        }
+      },
+      "effects": [
+        {
+          "type": "spin",
+          "source": {
+            "provider": "internal",
+            "name": "spin"
+          },
+          "enabled": true,
+          "target": "self",
+          "timing": {
+            "durationMs": 10000,
+            "easing": "linear",
+            "iteration": "infinite"
+          },
+          "params": {
+            "direction": "cw"
+          }
+        }
+      ]
+    }
+  ]
+}

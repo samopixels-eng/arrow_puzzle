@@ -1,0 +1,778 @@
+{
+  "contractVersion": 1,
+  "sceneId": "lobby-board",
+  "sceneName": "lobby-board",
+  "canvas": {
+    "width": 390,
+    "height": 844
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "background": {
+    "type": "solid",
+    "color": "#318add",
+    "color2": "#0e4a8c",
+    "gradientAngle": 180,
+    "imagePath": "",
+    "tileSize": 64,
+    "stretchMode": "cover",
+    "scrollEnabled": false,
+    "scrollDirection": "right",
+    "scrollDuration": 4
+  },
+  "groups": [
+    {
+      "name": "Ranking_Sample",
+      "layerStableIds": [
+        "rank-row-3",
+        "rank-badge-gold-4",
+        "royal-crown-11",
+        "crown-4"
+      ]
+    },
+    {
+      "name": "Group",
+      "layerStableIds": [
+        "rank-row-3",
+        "rank-badge-gold-4",
+        "royal-crown-11",
+        "crown-4"
+      ]
+    }
+  ],
+  "sceneAnimations": [],
+  "layers": [
+    {
+      "stableId": "leaderboard-title-41",
+      "layerType": "component",
+      "displayName": "leaderboard_title",
+      "x": 55,
+      "y": 50,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 1,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 280,
+            "height": 44,
+            "radius": 22,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2a62b0",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#7ab8f5"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1a3d7a"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 10,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 2,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 60
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Leaderboard",
+          "bindingKey": "",
+          "fontSize": 35,
+          "fontWeight": "900",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 8,
+              "color": "#0531e1"
+            },
+            "depth": {
+              "size": 2,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 4,
+              "y": 4,
+              "blur": 7,
+              "color": "#000000",
+              "opacity": 55
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "line-horizental-46",
+      "layerType": "component",
+      "displayName": "line_horizental",
+      "x": -5,
+      "y": 98,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 2,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 400,
+            "height": 8,
+            "radius": 4,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#ffd700",
+            "color2": "#d4960a",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 20
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "rank-row-3",
+      "layerType": "component",
+      "displayName": "Rank Row",
+      "x": 36,
+      "y": 120,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 3,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 320,
+            "height": 58,
+            "radius": 10,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#f5ede0",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 28,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 6,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 17
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": [
+          {
+            "exportPath": "assets/ctry/US.webp",
+            "imageKey": "",
+            "width": 40,
+            "height": 40,
+            "offsetX": -103,
+            "offsetY": 0,
+            "style": {
+              "shadow": {
+                "enabled": false,
+                "x": 0,
+                "y": 4,
+                "blur": 8,
+                "color": "#000000",
+                "opacity": 50
+              }
+            }
+          }
+        ]
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "Player345",
+          "bindingKey": "ranker.name",
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#2d1a0a",
+          "offsetX": -33,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 0,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 0
+            }
+          }
+        },
+        {
+          "slotIndex": 1,
+          "staticContent": "2585",
+          "bindingKey": "ranker.level",
+          "fontSize": 23,
+          "fontWeight": "normal",
+          "fontFamily": "\"Fredoka One\", cursive",
+          "color": "#fefcec",
+          "offsetX": 128,
+          "offsetY": 7,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#837049"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 2,
+              "y": 2,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 35
+            }
+          }
+        },
+        {
+          "slotIndex": 2,
+          "staticContent": "Level",
+          "bindingKey": "",
+          "fontSize": 17,
+          "fontWeight": "normal",
+          "fontFamily": "\"Lilita One\", cursive",
+          "color": "#8a7015",
+          "offsetX": 130,
+          "offsetY": -14,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 1,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 0
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "rank-badge-gold-4",
+      "layerType": "component",
+      "displayName": "Rank Badge Gold",
+      "x": 37,
+      "y": 133,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 4,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "circle",
+            "width": 34,
+            "height": 34,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "linear-gradient",
+            "color1": "#ffd700",
+            "color2": "#c8960a",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 2,
+            "color": "#ffe680"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": true,
+              "size": 2,
+              "color": "#8a6200"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 0,
+              "y": 2,
+              "blur": 5,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": true,
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#ffffff",
+              "opacity": 30
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "1",
+          "bindingKey": "ranking_text",
+          "fontSize": 18,
+          "fontWeight": "900",
+          "fontFamily": "\"Fredoka One\", cursive",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 2,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 1,
+              "y": 3,
+              "blur": 0,
+              "color": "#000000",
+              "opacity": 73
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "royal-crown-11",
+      "layerType": "component",
+      "displayName": "royal_crown",
+      "x": 243,
+      "y": 141,
+      "scale": 0.6,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 6,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "pill",
+            "width": 80,
+            "height": 40,
+            "radius": 20,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "depth-gradient",
+            "color1": "#cdc1a7",
+            "color2": "#7e753e",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": true,
+              "x": 2,
+              "y": 2,
+              "blur": 6,
+              "color": "#59584f",
+              "opacity": 81
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 0,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "0",
+          "bindingKey": "ranker.point",
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "fontFamily": "\"Fredoka One\", cursive",
+          "color": "#302c2c",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 1,
+              "blur": 2,
+              "color": "#000000",
+              "opacity": 30
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "crown-4",
+      "layerType": "image",
+      "displayName": "crown",
+      "x": 221,
+      "y": 139,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 59,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "exportPath": "assets/crown.webp",
+        "width": 30,
+        "height": 30,
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "effects": [],
+      "texts": [],
+      "image": {
+        "exportPath": "assets/crown.webp",
+        "imageKey": "",
+        "style": {
+          "shadow": {
+            "enabled": false,
+            "x": 0,
+            "y": 4,
+            "blur": 8,
+            "color": "#000000",
+            "opacity": 50
+          }
+        }
+      },
+      "rotation": 0,
+      "events": []
+    },
+    {
+      "stableId": "plain-text-980",
+      "layerType": "component",
+      "displayName": "Plain Text",
+      "x": 115,
+      "y": 678,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "zIndex": 7,
+      "visible": true,
+      "tabIds": [],
+      "navTabId": null,
+      "targetTabId": null,
+      "visual": {
+        "model": {
+          "shape": {
+            "type": "rectangle",
+            "width": 160,
+            "height": 19,
+            "radius": 12,
+            "notch": 20,
+            "hollowThickness": 8
+          },
+          "fill": {
+            "type": "none",
+            "color1": "#4a90d9",
+            "color2": "#2e6ab4",
+            "angle": 180,
+            "depthIntensity": 50,
+            "rayCount": 8
+          },
+          "border": {
+            "width": 0,
+            "color": "#6bb5ff"
+          },
+          "shadows": [
+            {
+              "type": "depth-edge",
+              "enabled": false,
+              "size": 0,
+              "color": "#1e4a80"
+            },
+            {
+              "type": "outer",
+              "enabled": false,
+              "x": 0,
+              "y": 4,
+              "blur": 8,
+              "color": "#000000",
+              "opacity": 30
+            },
+            {
+              "type": "inner",
+              "enabled": false,
+              "x": 0,
+              "y": 1,
+              "blur": 4,
+              "color": "#ffffff",
+              "opacity": 15
+            }
+          ],
+          "mask": {
+            "type": "ring-fade",
+            "enabled": false,
+            "innerPct": 28,
+            "outerPct": 76
+          }
+        },
+        "images": []
+      },
+      "effects": [],
+      "texts": [
+        {
+          "slotIndex": 0,
+          "staticContent": "The leaderboard updates every 10 minutes and may not reflect real-time data",
+          "bindingKey": "",
+          "fontSize": 10,
+          "fontWeight": "bold",
+          "fontFamily": "Arial, sans-serif",
+          "color": "#ffffff",
+          "offsetX": 0,
+          "offsetY": 0,
+          "style": {
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "depth": {
+              "size": 0,
+              "color": "#000000"
+            },
+            "shadow": {
+              "x": 0,
+              "y": 2,
+              "blur": 4,
+              "color": "#000000",
+              "opacity": 60
+            }
+          }
+        }
+      ],
+      "image": null,
+      "rotation": 0,
+      "events": []
+    }
+  ]
+}

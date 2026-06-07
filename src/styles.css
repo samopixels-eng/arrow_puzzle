@@ -18,7 +18,9 @@
 
 html,
 body {
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -37,16 +39,19 @@ button {
 }
 
 .app-shell {
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 14px 28px;
+  overflow: hidden;
+  padding: 16px 14px;
 }
 
 .top-bar {
   width: min(100%, 430px);
   min-height: 56px;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,6 +109,11 @@ button {
 .game-card {
   position: relative;
   width: min(100%, 430px);
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 650px;
+  display: flex;
+  flex-direction: column;
   background: var(--card);
   border-radius: 8px;
   box-shadow: 0 18px 45px rgba(43, 52, 76, 0.13);
@@ -112,23 +122,27 @@ button {
 
 .board-stage {
   position: relative;
-  display: block;
-  overflow: auto;
-  text-align: center;
-  padding: clamp(18px, 7vw, 34px) clamp(12px, 5vw, 26px) 16px;
-  min-height: min(74vh, 500px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #ffffff;
 }
 
-/* The canvas is sized explicitly in px by main.js (fixed point spacing). It
-   centres when it fits the stage and scrolls when a large board overflows. */
 #game-canvas {
-  display: inline-block;
-  max-width: none;
+  display: block;
+  width: 100%;
+  height: 100%;
   touch-action: none;
   user-select: none;
+  cursor: grab;
+}
+
+#game-canvas:active {
+  cursor: grabbing;
 }
 
 .game-footer {
+  flex: 0 0 auto;
   min-height: 58px;
   display: flex;
   align-items: center;
@@ -357,9 +371,5 @@ button {
   .app-shell {
     justify-content: center;
     padding-top: 28px;
-  }
-
-  .board-stage {
-    min-height: 470px;
   }
 }
