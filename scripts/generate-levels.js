@@ -207,8 +207,8 @@ function applySize(options, value) {
   options.pointRows = size.pointRows;
 }
 
-function collectArgs(rawArgs) {
-  const options = {
+function createDefaultOptions() {
+  return {
     count: 1,
     seed: "level",
     pointColumns: 7,
@@ -217,6 +217,10 @@ function collectArgs(rawArgs) {
     pretty: true,
     logFallbackWarning: false
   };
+}
+
+function collectArgs(rawArgs) {
+  const options = createDefaultOptions();
   const explicit = {
     count: false,
     seed: false,
@@ -473,6 +477,28 @@ function generateAppLevels(options) {
   });
 }
 
+// Generates levels from an already-parsed options object (no CLI string parsing).
+// Shared by the CLI main() and the generator GUI server so generation logic is
+// defined in exactly one place.
+function generateFromOptions(rawOptions) {
+  const options = { ...createDefaultOptions(), ...rawOptions };
+
+  applyShape(options);
+  validateOptions(options);
+
+  if (options.app) {
+    return generateAppLevels(options);
+  }
+
+  const levels = [];
+
+  for (let index = 1; index <= options.count; index += 1) {
+    levels.push(generator.generateLevel(buildGeneratorOptions(options, index)));
+  }
+
+  return levels;
+}
+
 function main() {
   const parsed = collectArgs(process.argv.slice(2));
 
@@ -486,7 +512,7 @@ function main() {
   validateOptions(parsed.options);
 
   if (parsed.options.app) {
-    const levels = generateAppLevels(parsed.options);
+    const levels = generateFromOptions(parsed.options);
 
     if (parsed.options.json) {
       writeJson(parsed.options.out, levels, parsed.options.pretty);
@@ -499,14 +525,7 @@ function main() {
     return;
   }
 
-  const levels = [];
-
-  for (let index = 1; index <= parsed.options.count; index += 1) {
-    const generatorOptions = buildGeneratorOptions(parsed.options, index);
-    const level = generator.generateLevel(generatorOptions);
-
-    levels.push(level);
-  }
+  const levels = generateFromOptions(parsed.options);
 
   const payload = levels.length === 1 ? levels[0] : levels;
 
@@ -526,9 +545,20 @@ function main() {
   }
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(error.message);
-  process.exitCode = 1;
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
 }
+
+module.exports = {
+  createDefaultOptions,
+  generateFromOptions,
+  writeLevelStore,
+  summarize,
+  APP_LEVEL_LAYOUTS,
+  SHAPES
+};

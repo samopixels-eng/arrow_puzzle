@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arrow Puzzle · Level Generator</title>
+    <style>
+      :root {
+        --ink: #111a4f;
+        --line: #d7dbe8;
+        --bg: #f4f5fa;
+        --panel: #ffffff;
+        --accent: #2f4fd6;
+        --danger: #c0392b;
+        --muted: #6b7187;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+      .layout { display: flex; min-height: 100vh; }
+      .controls {
+        width: 320px;
+        flex: 0 0 320px;
+        padding: 20px;
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+        overflow-y: auto;
+        height: 100vh;
+      }
+      .results { flex: 1; padding: 20px; overflow-y: auto; height: 100vh; }
+      h1 { font-size: 18px; margin: 0 0 16px; }
+      h2 { font-size: 13px; margin: 18px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+      label { display: block; font-size: 13px; margin: 10px 0 4px; }
+      input, select {
+        width: 100%;
+        padding: 7px 9px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        font-size: 14px;
+        color: var(--ink);
+        background: #fff;
+      }
+      input:disabled { background: #eef0f6; color: var(--muted); }
+      .row { display: flex; gap: 10px; }
+      .row > div { flex: 1; }
+      details { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 8px; }
+      summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+      .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+      button {
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #fff;
+        background: var(--accent);
+      }
+      button.secondary { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .status { margin-top: 12px; font-size: 13px; min-height: 18px; }
+      .status.error { color: var(--danger); white-space: pre-wrap; }
+      .status.ok { color: #1e8449; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+      .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+      .card canvas { width: 100%; height: auto; background: #fff; border-radius: 6px; }
+      .card .meta { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.5; word-break: break-all; }
+      .card .meta b { color: var(--ink); }
+      .empty { color: var(--muted); font-size: 14px; }
+      .badge {
+        display: inline-block;
+        padding: 1px 7px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .badge.easy { background: #27ae60; }
+      .badge.normal { background: #e67e22; }
+      .badge.hard { background: #c0392b; }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="controls">
+        <h1>레벨 생성기</h1>
+
+        <label for="count">개수</label>
+        <input id="count" type="number" min="1" value="1" />
+
+        <label for="shape">모양</label>
+        <select id="shape">
+          <option value="none">사각형(직접 크기 지정)</option>
+          <option value="gem">gem</option>
+          <option value="plus">plus</option>
+          <option value="heart">heart</option>
+        </select>
+
+        <div class="row">
+          <div>
+            <label for="cols">가로(cols)</label>
+            <input id="cols" type="number" min="2" value="7" />
+          </div>
+          <div>
+            <label for="rows">세로(rows)</label>
+            <input id="rows" type="number" min="2" value="7" />
+          </div>
+        </div>
+
+        <label for="seed">시드(seed)</label>
+        <input id="seed" type="text" value="level" />
+
+        <label for="algorithm">알고리즘</label>
+        <select id="algorithm">
+          <option value="free-placement">free-placement</option>
+          <option value="reverse">reverse</option>
+          <option value="flow">flow</option>
+        </select>
+
+        <details>
+          <summary>고급 옵션 (비우면 기본값)</summary>
+          <div class="row">
+            <div>
+              <label for="minEdges">minEdges</label>
+              <input id="minEdges" type="number" min="1" placeholder="기본" />
+            </div>
+            <div>
+              <label for="maxEdges">maxEdges</label>
+              <input id="maxEdges" type="number" min="1" placeholder="기본" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="maxAttempts">maxAttempts</label>
+              <input id="maxAttempts" type="number" min="1" placeholder="기본" />
+            </div>
+            <div>
+              <label for="pathAttempts">pathAttempts</label>
+              <input id="pathAttempts" type="number" min="1" placeholder="기본" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="longLineChance">longLineChance</label>
+              <input id="longLineChance" type="number" step="0.01" placeholder="기본" />
+            </div>
+            <div>
+              <label for="straightBias">straightBias</label>
+              <input id="straightBias" type="number" step="0.01" placeholder="기본" />
+            </div>
+          </div>
+          <label for="rayBias">rayBias</label>
+          <input id="rayBias" type="number" step="0.01" placeholder="기본" />
+        </details>
+
+        <div class="actions">
+          <button id="preview-btn" class="secondary" type="button">미리보기 생성</button>
+          <button id="save-btn" type="button">생성 + levels.js 저장</button>
+        </div>
+        <div id="status" class="status"></div>
+      </aside>
+
+      <main class="results">
+        <div id="grid" class="grid">
+          <p class="empty">옵션을 정하고 "미리보기 생성"을 누르세요.</p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ---- Field wiring -------------------------------------------------
+      const NUMBER_FIELDS = [
+        "count", "cols", "rows", "minEdges", "maxEdges",
+        "maxAttempts", "pathAttempts", "longLineChance", "straightBias", "rayBias"
+      ];
+      const OPTION_KEY = {
+        cols: "pointColumns",
+        rows: "pointRows"
+      };
+
+      const shapeSelect = document.getElementById("shape");
+      const colsInput = document.getElementById("cols");
+      const rowsInput = document.getElementById("rows");
+
+      function syncShapeState() {
+        const usingShape = shapeSelect.value !== "none";
+        colsInput.disabled = usingShape;
+        rowsInput.disabled = usingShape;
+      }
+      shapeSelect.addEventListener("change", syncShapeState);
+      syncShapeState();
+
+      function readValue(id) {
+        const el = document.getElementById(id);
+        const raw = el.value.trim();
+        if (raw === "") return undefined;
+        if (NUMBER_FIELDS.includes(id)) {
+          const num = Number(raw);
+          return Number.isNaN(num) ? undefined : num;
+        }
+        return raw;
+      }
+
+      function buildOptions() {
+        const options = {};
+        const shape = shapeSelect.value;
+
+        if (shape !== "none") {
+          options.shape = shape;
+        }
+
+        const fields = ["count", "seed", "algorithm", "minEdges", "maxEdges",
+          "maxAttempts", "pathAttempts", "longLineChance", "straightBias", "rayBias"];
+
+        if (shape === "none") {
+          fields.push("cols", "rows");
+        }
+
+        for (const id of fields) {
+          const value = readValue(id);
+          if (value !== undefined) {
+            options[OPTION_KEY[id] || id] = value;
+          }
+        }
+        return options;
+      }
+
+      // ---- Static preview renderer -------------------------------------
+      function renderLevel(canvas, level) {
+        const ctx = canvas.getContext("2d");
+        const size = 260;
+        const pad = 22;
+        canvas.width = size;
+        canvas.height = size;
+        ctx.clearRect(0, 0, size, size);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, size, size);
+
+        const cols = level.pointColumns;
+        const rows = level.pointRows;
+        const span = Math.max(cols - 1, rows - 1, 1);
+        const step = (size - pad * 2) / span;
+        const offsetX = pad + ((size - pad * 2) - (cols - 1) * step) / 2;
+        const offsetY = pad + ((size - pad * 2) - (rows - 1) * step) / 2;
+
+        const toScreen = (gx, gy) => ({ x: offsetX + gx * step, y: offsetY + gy * step });
+
+        // mask: array of "x,y" keys (absent => full grid)
+        const maskSet = Array.isArray(level.mask) ? new Set(level.mask) : null;
+
+        // grid points
+        ctx.fillStyle = "rgba(17, 26, 79, 0.16)";
+        for (let gy = 0; gy < rows; gy += 1) {
+          for (let gx = 0; gx < cols; gx += 1) {
+            if (maskSet && !maskSet.has(`${gx},${gy}`)) continue;
+            const p = toScreen(gx, gy);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, Math.max(1.5, step * 0.06), 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // solve order lookup (arrow id -> 1-based order)
+        const orderById = {};
+        if (Array.isArray(level.solutionOrder)) {
+          level.solutionOrder.forEach((id, idx) => { orderById[id] = idx + 1; });
+        }
+
+        const lineWidth = Math.max(2.5, step * 0.16);
+        for (const arrow of level.arrows) {
+          const pts = arrow.path.map(([gx, gy]) => toScreen(gx, gy));
+          if (pts.length < 2) continue;
+
+          ctx.strokeStyle = arrow.color || "#111a4f";
+          ctx.fillStyle = arrow.color || "#111a4f";
+          ctx.lineWidth = lineWidth;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i += 1) ctx.lineTo(pts[i].x, pts[i].y);
+          ctx.stroke();
+
+          drawHead(ctx, pts[pts.length - 2], pts[pts.length - 1], step);
+
+          const order = orderById[arrow.id];
+          if (order) {
+            const start = pts[0];
+            ctx.save();
+            ctx.fillStyle = "#fff";
+            ctx.strokeStyle = arrow.color || "#111a4f";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(start.x, start.y, step * 0.18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = arrow.color || "#111a4f";
+            ctx.font = `${Math.max(8, step * 0.22)}px sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(String(order), start.x, start.y);
+            ctx.restore();
+          }
+        }
+      }
+
+      function drawHead(ctx, from, to, step) {
+        const angle = Math.atan2(to.y - from.y, to.x - from.x);
+        const len = Math.max(6, step * 0.32);
+        const spread = Math.PI / 6;
+        ctx.beginPath();
+        ctx.moveTo(to.x, to.y);
+        ctx.lineTo(to.x - len * Math.cos(angle - spread), to.y - len * Math.sin(angle - spread));
+        ctx.lineTo(to.x - len * Math.cos(angle + spread), to.y - len * Math.sin(angle + spread));
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      function difficultyBadge(level) {
+        const d = level.difficulty || (level.stats && level.stats.classifiedDifficulty) || "?";
+        const cls = ["easy", "normal", "hard"].includes(d) ? d : "";
+        return `<span class="badge ${cls}">${d}</span>`;
+      }
+
+      function renderResults(levels) {
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+        levels.forEach((level, index) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          const canvas = document.createElement("canvas");
+          card.appendChild(canvas);
+
+          const s = level.stats || {};
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          meta.innerHTML = [
+            `<b>#${index + 1}</b> ${difficultyBadge(level)} ${level.name ? "· " + level.name : ""}`,
+            `seed: ${level.seed}`,
+            `${level.pointColumns}×${level.pointRows} · arrows ${level.arrows.length}`,
+            `initial ${s.initialMoves ?? "?"} · depth ${s.dependencyDepth ?? "?"} · score ${s.difficultyScore ?? "?"}`,
+            `mode: ${s.generationMode ?? "?"}`
+          ].join("<br/>");
+          card.appendChild(meta);
+
+          grid.appendChild(card);
+          renderLevel(canvas, level);
+        });
+      }
+
+      // ---- Request flow -------------------------------------------------
+      const statusEl = document.getElementById("status");
+      const previewBtn = document.getElementById("preview-btn");
+      const saveBtn = document.getElementById("save-btn");
+
+      function setStatus(text, kind) {
+        statusEl.textContent = text;
+        statusEl.className = "status" + (kind ? " " + kind : "");
+      }
+
+      async function generate(save) {
+        const options = buildOptions();
+        previewBtn.disabled = true;
+        saveBtn.disabled = true;
+        setStatus(save ? "생성 후 저장 중…" : "생성 중…");
+
+        try {
+          const res = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ options, save })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || `HTTP ${res.status}`);
+          }
+          renderResults(data.levels);
+          if (data.savedPath) {
+            setStatus(`저장 완료 (${data.levels.length}개) → ${data.savedPath}`, "ok");
+          } else {
+            setStatus(`${data.levels.length}개 생성 완료 (미저장)`, "ok");
+          }
+        } catch (error) {
+          setStatus(error.message, "error");
+        } finally {
+          previewBtn.disabled = false;
+          saveBtn.disabled = false;
+        }
+      }
+
+      previewBtn.addEventListener("click", () => generate(false));
+      saveBtn.addEventListener("click", () => generate(true));
+    </script>
+  </body>
+</html>

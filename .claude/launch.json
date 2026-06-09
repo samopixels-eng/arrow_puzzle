@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "Level generator GUI",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/generator-server.js"],
+      "port": 4178
+    },
+    {
       "name": "Static site (python http.server)",
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8000"],
